@@ -23,9 +23,10 @@ $(document).ready(function () {
 		this.mousedown = true;
 }
 	tileditor.MouseUpEvents = function(e) {
-	if(demoSprite.IsMouseDown() && tileditor.dropToTile) {
-	   var tr = tileditor.dropToTile.GetTranslation();
+	if(demoSprite.IsMouseDown() && demoSprite.TrackingSprite) {
+	   var tr = demoSprite.TrackingSprite.GetTranslation();
 	   demoSprite.SetTranslation(tr.x,tr.y);
+	   demoSprite.TrackingSprite.SetTranslation(-9999,-9999)
 	}
 		mouseUpDetection(e,false);
 		this.mousedown = false;
@@ -37,9 +38,15 @@ $(document).ready(function () {
 		mouseMoveDetection(e,false);
 	}	
 	
+
 	var width_tiles = 16;
 	var height_tiles = 16;
 	var square_length = 48;
+	
+	var CanvasBounds = new Difractal.Entity(0,0,square_length*width_tiles,square_length*height_tiles);
+	CanvasBounds.SetZIndex(0);
+	tileditor.Add(CanvasBounds);	
+	
 	
 	var tiles = createArray(width_tiles, height_tiles);
 	
@@ -51,63 +58,115 @@ $(document).ready(function () {
 			//tiles[i,j].SetText("");
 			//tiles[i,j].SetTextColor("#000");
 			tiles[i,j].Action = function() { };
+			tiles[i,j].SetZIndex(2);
 			
 			
 			tileditor.AddRange([tiles[i,j]]);
 		}
 	}
 	
-	var demoSprite = new Difractal.Entity(0,0,square_length,square_length);
+	//This demo sprite is twice the length and width of each tile
+	var demoSprite = new Difractal.Entity(0,0,square_length*2,square_length*2);
 	demoSprite.SetFillStyle("green");
     demoSprite.SetLineWidth(0);
 	demoSprite.SetZIndex(10);
+	demoSprite.TrackingSprite = new Difractal.Entity(-9999,-9999,square_length*2,square_length*2);
+    demoSprite.TrackingSprite.SetFillStyle("yellow");
+    demoSprite.TrackingSprite.SetLineWidth(0);
+	demoSprite.TrackingSprite.SetZIndex(9);
+	
 	demoSprite.MouseMove = function(e) {
 		if(this.IsMouseDown()) {
+
+		   if(e.offsetX.toString() == "undefined") {
+		      console.log(e);
+		   }
+		
 			this.lastX = this.curX;
 			this.curX = e.offsetX;
 			this.lastY = this.curY;
-			this.curY = e.offsetY;
-			
+			this.curY = e.offsetY;	
+
+
+
 			var tr = this.GetTranslation();
 			var trX = tr.x+this.curX-this.lastX;
 			var trY = tr.y+this.curY-this.lastY;
-			if(trX < 0) {
-				trX = 0;
-			} 
-			else if(trX > Difractal.CanvasRef.width) {
-				trX = Difractal.CanvasRef.width;
-			}
-			if(trY < 0) {
-				trY = 0;
-			} 
-			else if(trY > Difractal.CanvasRef.height) {
-				trY = Difractal.CanvasRef.height;
-			}
+			this.maskTrX += this.curX - this.lastX;
+			this.maskTrY +=  this.curY - this.lastY;
 
-			this.SetTranslation(trX, trY);
-			
+
+				if(trX < 0) {
+					trX = 0;
+					this.OutOfBoundsX = true;
+				} 
+				else if(trX + this.GetDimensions().w > square_length*width_tiles) {
+					trX = square_length*width_tiles - this.GetDimensions().w;
+					this.OutOfBoundsX = true;
+				} 
+				else {
+				   this.OutOfBoundsX = false;
+				}
+				
+				if(trY < 0) {
+					trY = 0;
+					this.OutOfBoundsY = true;
+				} 
+				else if(trY + this.GetDimensions().h > square_length*height_tiles) {
+					trY = square_length*height_tiles - this.GetDimensions().h;
+					this.OutOfBoundsY = true;
+				}		
+				else {
+				    this.OutOfBoundsY = false;
+				}
+				
+
+             if(Math.abs(this.maskTrX - trX) <= 10 || this.OutOfBoundsX ) {
+			    this.SetTranslationX(trX);
+			 }
+			 
+             if(Math.abs(this.maskTrY- trY) <= 10 || this.OutOfBoundsY ) {
+			    this.SetTranslationY(trY);
+			 }		
+           		
 			
 
 		   var _entities = Difractal.CurrentState.GetEntities();
+           var checkPT = {"x" : this.relativeMDX + trX, "y" : this.relativeMDY + trY };
+		   
 		   for(var y in _entities) {
 		     var x = _entities[y];
+			 var adjusted = false;
 		      if(x != this) {
-					if(x.Contains(e.offsetX,e.offsetY)) {
-					 x.SetFillStyle("yellow");
-					 tileditor.dropToTile = x;
-				  } else {
-					 x.SetFillStyle("rgba(255, 0, 255, 0.1)");
-				  }
+					if(x.Contains(checkPT.x,checkPT.y)) {
+					 var tr = x.GetTranslation();
+					 var trX = tr.x;
+					 var trY = tr.y;
+
+					if(tr.x + demoSprite.GetDimensions().w > width_tiles*square_length ) {
+					   trX = width_tiles*square_length - demoSprite.GetDimensions().w;
+					}
+										 
+					if(tr.y + demoSprite.GetDimensions().h > height_tiles*square_length) {
+					    trY = height_tiles*square_length - demoSprite.GetDimensions().h
+				     }
+ 
+                    
+					 demoSprite.TrackingSprite.SetTranslation(trX,trY);
+
+				  } 
 			  }
 		   }
-				
+		
 			
 			
 		}
 	}	
 	
 	tileditor.Add(demoSprite);
+	tileditor.Add(demoSprite.TrackingSprite);
 	
+
 	
 	Difractal.Master.Push(tileditor);
 

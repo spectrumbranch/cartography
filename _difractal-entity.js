@@ -188,6 +188,12 @@ Difractal.Entity = function(x, y, w, h) {
 			 y: b
 		  };
 	   },
+	   SetTranslationX: function (n) {
+	      translation.x = n;
+	   },
+	   SetTranslationY: function (n) {
+	      translation.y = n;
+	   },
 	   SetZIndex: function (n) {
 		  zindex = n;
 	   },
@@ -260,6 +266,12 @@ Difractal.Entity = function(x, y, w, h) {
 		 this.lastY = e.offsetY;
 		 this.curX = e.offsetX;
 		 this.curY = e.offsetY;
+		 this.mdX = e.offsetX;
+		 this.mdY = e.offsetY;
+		 this.relativeMDX = e.offsetX - translation.x;
+		 this.relativeMDY = e.offsetY - translation.y;
+		 this.maskTrX = translation.x;
+		 this.maskTrY = translation.y;
 	  },
 	  MouseUp: function() {
 		mousedown = false;
