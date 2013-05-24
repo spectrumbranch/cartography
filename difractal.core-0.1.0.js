@@ -19,7 +19,7 @@ Difractal.GlobalNamespace = this;
 
 Difractal.Include = function(module, version) {
 	//Only currently programmed to handle files in the current directory.
-	var prefix = "spectrumbranch.difractal.";
+	var prefix = "difractal.";
 	var suffix = ".js";
 	var moduleSuffix = "-";
 	
@@ -63,11 +63,13 @@ Difractal.ClearCanvas = function() {
 Difractal.CanvasRef = null;
 Difractal.Context = null;
 
+//Draw Loop
+Difractal.Draw = function() {
+	var index = Difractal.Master.length-1;
+	Difractal.ClearCanvas();
+	Difractal.Master[index].Draw(Difractal.Context);
+}
+
 $(document).ready(function () {
-	//Draw Loop
-	setInterval(function() {
-		var index = Difractal.Master.length-1;
-		Difractal.ClearCanvas();
-		Difractal.Master[index].Draw(Difractal.Context);
-	}, Difractal.DrawFrequency);
+	setInterval(Difractal.Draw, Difractal.DrawFrequency);
 });

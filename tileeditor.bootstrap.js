@@ -1,3 +1,4 @@
+/*Tricky but awesome function found on stack overflow*/
 function createArray(length) {
     var arr = new Array(length || 0),
         i = length;
@@ -24,10 +25,11 @@ $(document).ready(function () {
 	
 	for (var i = 0; i < width_tiles; i++) {
 		for (var j = 0; j < height_tiles; j++) {
-			tiles[i,j] = new Difractal.Rectangle(i*square_length,j*square_length,square_length,square_length);
+			tiles[i,j] = new Difractal.Entity(i*square_length,j*square_length,square_length,square_length);
 			tiles[i,j].SetFillStyle("rgba(255, 0, 255, 0.1)");
+			tiles[i,j].SetLineWidth("0");
 			//tiles[i,j].SetText("");
-			tiles[i,j].SetTextColor("#000");
+			//tiles[i,j].SetTextColor("#000");
 			tiles[i,j].Action = function() { };
 			
 			

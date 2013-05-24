@@ -107,7 +107,9 @@ Difractal.Rectangle = function(x, y, w, h) {
 			c.scale(scale.x, scale.y);				 			  
 			c.rect(0, 0, w, h);
 			c.fill();
-			c.stroke();
+			if (lineWidth > 0) {
+				c.stroke(); 
+			}
 			c.closePath();
 			if (text.length > 0) {
 				c.font = font;
