@@ -66,72 +66,46 @@ $(document).ready(function () {
 	}
 	
 	//This demo sprite is twice the length and width of each tile
-	var demoSprite = new Difractal.Entity(0,0,square_length*4,square_length*4);
+	var demoSprite = new Difractal.Entity(0,0,square_length*3,square_length*3);
 	demoSprite.SetFillStyle("green");
     demoSprite.SetLineWidth(0);
 	demoSprite.SetZIndex(10);
-	demoSprite.TrackingSprite = new Difractal.Entity(-9999,-9999,square_length*4,square_length*4);
-    demoSprite.TrackingSprite.SetFillStyle("yellow");
+	demoSprite.TrackingSprite = new Difractal.Entity(-9999,-9999,square_length*3,square_length*3);
+    demoSprite.TrackingSprite.SetFillStyle("rgba(255, 255, 0, 0.5)");
     demoSprite.TrackingSprite.SetLineWidth(0);
 	demoSprite.TrackingSprite.SetZIndex(9);
 	
 	demoSprite.MouseMove = function(e) {
 		if(this.IsMouseDown()) {
-
-		   if(e.offsetX.toString() == "undefined") {
-		      console.log(e);
-		   }
-		
+	
 			this.lastX = this.curX;
 			this.curX = e.offsetX;
 			this.lastY = this.curY;
 			this.curY = e.offsetY;	
 
-
-
 			var tr = this.GetTranslation();
-			var trX = tr.x+this.curX-this.lastX;
-			var trY = tr.y+this.curY-this.lastY;
-			this.maskTrX += this.curX - this.lastX;
-			this.maskTrY +=  this.curY - this.lastY;
+			var trX = e.offsetX - (this.relativeMDX);
+			var trY = e.offsetY - (this.relativeMDY);
 
+			if(trX < 0) {
+				trX = 0;
+			} 
+			else if(trX + this.GetDimensions().w > square_length*width_tiles) {
+				trX = square_length*width_tiles - this.GetDimensions().w;
+			} 
+			
+			if(trY < 0) {
+				trY = 0;
+			} 
+			else if(trY + this.GetDimensions().h > square_length*height_tiles) {
+				trY = square_length*height_tiles - this.GetDimensions().h;
+			}		
 
-				if(trX < 0) {
-					trX = 0;
-					this.OutOfBoundsX = true;
-				} 
-				else if(trX + this.GetDimensions().w > square_length*width_tiles) {
-					trX = square_length*width_tiles - this.GetDimensions().w;
-
-					this.OutOfBoundsX = true;
-				} 
-				else {
-				   this.OutOfBoundsX = false;
-				}
-				
-				if(trY < 0) {
-					trY = 0;
-					this.OutOfBoundsY = true;
-				} 
-				else if(trY + this.GetDimensions().h > square_length*height_tiles) {
-					trY = square_length*height_tiles - this.GetDimensions().h;
-					this.OutOfBoundsY = true;
-				}		
-				else {
-				    this.OutOfBoundsY = false;
-				}
-				
-
-             if(Math.abs(this.maskTrX - trX) <= 10 || this.OutOfBoundsX ) {
-			    this.SetTranslationX(trX);
-			 }
+			
+			this.SetTranslation(trX,trY);
 			 
-             if(Math.abs(this.maskTrY- trY) <= 10 || this.OutOfBoundsY ) {
-			    this.SetTranslationY(trY);
-			 }		
            		
 			
-
 		   var _entities = Difractal.CurrentState.GetEntities();
            var checkPT = {"x" : this.relativeMDX + trX, "y" : this.relativeMDY + trY };
 		   
