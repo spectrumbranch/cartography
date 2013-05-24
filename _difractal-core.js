@@ -29,8 +29,8 @@ Difractal.ClearCanvas = function (context, canvas) {
 }
 
 Difractal.Draw = function () {
-    Difractal.ClearCanvas(Difractal.ctx,Difractal.c);
-    Difractal.CurrentState.Draw(Difractal.ctx);
+    Difractal.ClearCanvas(Difractal.Context,Difractal.CanvasRef);
+    Difractal.CurrentState.Draw(Difractal.Context);
 }
 
 //Update Loop
