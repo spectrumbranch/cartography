@@ -66,11 +66,11 @@ $(document).ready(function () {
 	}
 	
 	//This demo sprite is twice the length and width of each tile
-	var demoSprite = new Difractal.Entity(0,0,square_length*2,square_length*2);
+	var demoSprite = new Difractal.Entity(0,0,square_length*4,square_length*4);
 	demoSprite.SetFillStyle("green");
     demoSprite.SetLineWidth(0);
 	demoSprite.SetZIndex(10);
-	demoSprite.TrackingSprite = new Difractal.Entity(-9999,-9999,square_length*2,square_length*2);
+	demoSprite.TrackingSprite = new Difractal.Entity(-9999,-9999,square_length*4,square_length*4);
     demoSprite.TrackingSprite.SetFillStyle("yellow");
     demoSprite.TrackingSprite.SetLineWidth(0);
 	demoSprite.TrackingSprite.SetZIndex(9);
@@ -102,6 +102,7 @@ $(document).ready(function () {
 				} 
 				else if(trX + this.GetDimensions().w > square_length*width_tiles) {
 					trX = square_length*width_tiles - this.GetDimensions().w;
+
 					this.OutOfBoundsX = true;
 				} 
 				else {
@@ -145,14 +146,20 @@ $(document).ready(function () {
 
 					if(tr.x + demoSprite.GetDimensions().w > width_tiles*square_length ) {
 					   trX = width_tiles*square_length - demoSprite.GetDimensions().w;
+					} 
+					else if(demoSprite.GetTranslation().x == 0) {
+					   trX = 0;
 					}
 										 
 					if(tr.y + demoSprite.GetDimensions().h > height_tiles*square_length) {
 					    trY = height_tiles*square_length - demoSprite.GetDimensions().h
 				     }
+					else if(demoSprite.GetTranslation().y == 0) {
+					   trY = 0;
+					}
  
-                    
 					 demoSprite.TrackingSprite.SetTranslation(trX,trY);
+					 
 
 				  } 
 			  }
