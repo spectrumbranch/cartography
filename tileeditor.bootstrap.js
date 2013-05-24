@@ -23,8 +23,13 @@ $(document).ready(function () {
 		this.mousedown = true;
 }
 	tileditor.MouseUpEvents = function(e) {
+	if(demoSprite.IsMouseDown() && tileditor.dropToTile) {
+	   var tr = tileditor.dropToTile.GetTranslation();
+	   demoSprite.SetTranslation(tr.x,tr.y);
+	}
 		mouseUpDetection(e,false);
 		this.mousedown = false;
+		
 	}
 
 
@@ -89,6 +94,7 @@ $(document).ready(function () {
 		      if(x != this) {
 					if(x.Contains(e.offsetX,e.offsetY)) {
 					 x.SetFillStyle("yellow");
+					 tileditor.dropToTile = x;
 				  } else {
 					 x.SetFillStyle("rgba(255, 0, 255, 0.1)");
 				  }
