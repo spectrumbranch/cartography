@@ -21,13 +21,13 @@ $(document).ready(function () {
 	tileditor.MouseDownEvents = function(e) {
 		clickDetection(e,false,"mousedown");
 		this.mousedown = true;
-}
-	tileditor.MouseUpEvents = function(e) {
-	if(demoSprite.IsMouseDown() && demoSprite.TrackingSprite) {
-	   var tr = demoSprite.TrackingSprite.GetTranslation();
-	   demoSprite.SetTranslation(tr.x,tr.y);
-	   demoSprite.TrackingSprite.SetTranslation(-9999,-9999)
 	}
+	tileditor.MouseUpEvents = function(e) {
+		if (demoSprite.IsMouseDown() && demoSprite.TrackingSprite) {
+		   var tr = demoSprite.TrackingSprite.GetTranslation();
+		   demoSprite.SetTranslation(tr.x,tr.y);
+		   demoSprite.TrackingSprite.SetTranslation(-9999,-9999)
+		}
 		mouseUpDetection(e,false);
 		this.mousedown = false;
 		
@@ -67,11 +67,11 @@ $(document).ready(function () {
 	
 	//This demo sprite is twice the length and width of each tile
 	var demoSprite = new Difractal.Entity(0,0,square_length*3,square_length*3);
-	demoSprite.SetFillStyle("green");
+	demoSprite.SetFillStyle("rgba(0, 255, 0, 0.3)");
     demoSprite.SetLineWidth(0);
 	demoSprite.SetZIndex(10);
 	demoSprite.TrackingSprite = new Difractal.Entity(-9999,-9999,square_length*3,square_length*3);
-    demoSprite.TrackingSprite.SetFillStyle("rgba(255, 255, 0, 0.5)");
+    demoSprite.TrackingSprite.SetFillStyle("rgba(125, 125, 255, 0.5)");
     demoSprite.TrackingSprite.SetLineWidth(0);
 	demoSprite.TrackingSprite.SetZIndex(9);
 	
