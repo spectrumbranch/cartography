@@ -205,12 +205,11 @@ $(document).ready(function () {
 	});	
 	
 	$.each(Difractal.Canvases, function(index,value){	
-	    console.log(value);
+
 		$(index).click(function(e){
 			Difractal.Canvases[index].CurrentState.ClickEvents(e);	
 		}).mousedown(function(e){
 			Difractal.Canvases[index].CurrentState.MouseDownEvents(e);
-           console.log(index);
 		});
 
 	});
