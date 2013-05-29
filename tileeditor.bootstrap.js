@@ -12,14 +12,16 @@ function createArray(length) {
 }
 
 $(document).ready(function () {
-	Difractal.CanvasRef = document.getElementById("canvas");
-	Difractal.Context = Difractal.CanvasRef.getContext("2d");
+    /*Register Canvases */
+	Difractal.AddCanvas("#canvas");
+	Difractal.AddCanvas("#canvas2");
 	
 	var tileditor = new Difractal.GameState();
+	tileditor.CanvasObject = Difractal.Canvases["#canvas"];
 	
 	tileditor.mousedown = false;
 	tileditor.MouseDownEvents = function(e) {
-		clickDetection(e,false,"mousedown");
+		clickDetection(e,this,"mousedown");
 		this.mousedown = true;
 }
 	tileditor.MouseUpEvents = function(e) {
@@ -28,14 +30,14 @@ $(document).ready(function () {
 	   demoSprite.SetTranslation(tr.x,tr.y);
 	   demoSprite.TrackingSprite.SetTranslation(-9999,-9999)
 	}
-		mouseUpDetection(e,false);
+		mouseUpDetection(e,this);
 		this.mousedown = false;
 		
 	}
 
 
 	tileditor.MouseMoveEvents = function(e) {
-		mouseMoveDetection(e,false);
+		mouseMoveDetection(e,this);
 	}	
 	
 
@@ -106,7 +108,7 @@ $(document).ready(function () {
 			 
            		
 			
-		   var _entities = Difractal.CurrentState.GetEntities();
+		   var _entities = Difractal.Canvases["#canvas"].CurrentState.GetEntities();
            var checkPT = {"x" : this.relativeMDX + trX, "y" : this.relativeMDY + trY };
 		   
 		   for(var y in _entities) {
@@ -146,10 +148,25 @@ $(document).ready(function () {
 	
 	tileditor.Add(demoSprite);
 	tileditor.Add(demoSprite.TrackingSprite);
+	Difractal.Canvases["#canvas"].Master.Push(tileditor);	
+	
+	
+	
+	
+	
+	/*Testing out the second canvas! */
+	var Canvas2TestState = new Difractal.GameState();
+	Canvas2TestState.CanvasObject = Difractal.Canvases["#canvas"];
+	var C2TSMask = new Difractal.Entity(0,0,400,300);
+	C2TSMask.SetStrokeStyle("red");
+	C2TSMask.SetFillStyle("purple");
+	C2TSMask.SetText("It works!");
+	Canvas2TestState.Add(C2TSMask);
+	Difractal.Canvases["#canvas2"].Master.Push(Canvas2TestState);		
 	
 
 	
-	Difractal.Master.Push(tileditor);
+
 
  });
  
@@ -165,26 +182,44 @@ $(document).ready(function () {
 	});
 	$(document).keydown(function(e) {
 		keys[e.which] = true;
-		Difractal.CurrentState.KeyDownEvents(e);
+		Difractal.Canvases["#canvas"].CurrentState.KeyDownEvents(e);
 		e.preventDefault();
 	});	
 	
-	$("#canvas").click(function(e){
-		Difractal.CurrentState.ClickEvents(e);	
-	});
-	
-	$("#canvas").mousedown(function(e){
-		Difractal.CurrentState.MouseDownEvents(e);
-	});
-	
 	$(document).mouseup(function(e){
-		Difractal.CurrentState.MouseUpEvents(e);
+		Difractal.Canvases["#canvas"].CurrentState.MouseUpEvents(e);
 	});	
 	
 	$(document).mousemove(function(e){
-		Difractal.CurrentState.MouseMoveEvents(e);
+		Difractal.Canvases["#canvas"].CurrentState.MouseMoveEvents(e);
 	});	
 	
+	/*for(var x in Difractal.Canvases) {
+	  var $x = $(x);
+	  var _CanvasObject = Difractal.Canvases[x];
+	  
+		$x.click(function(e){
+		
+			_CanvasObject.CurrentState.ClickEvents(e);	
+		});
+		
+		$x.mousedown(function(e){
+			_CanvasObject.CurrentState.MouseDownEvents(e);
+		});
+	}
+	*/
+	  var $x = $("#canvas");
+	  var _CanvasObject = Difractal.Canvases["#canvas"];
+	  
+		$x.click(function(e){
+		
+			_CanvasObject.CurrentState.ClickEvents(e);	
+		});
+		
+		$x.mousedown(function(e){
+			_CanvasObject.CurrentState.MouseDownEvents(e);
+		});
+
 	$("#controls").click(function(e){
 		clickDetection(e, battlescreen.controls, "click");
 	});

@@ -16,9 +16,11 @@
 				e.offsetX = e.pageX - targetOffset.left;
 				e.offsetY = e.pageY - targetOffset.top;
 			}
-			
+
 			var _gamestate = (state ? state : Difractal.CurrentState);
 			var _entities = _gamestate.GetEntities();
+			
+
 			var zindex;
 			var index;
 			for (var key in _entities) {
