@@ -160,7 +160,11 @@ $(document).ready(function () {
 	var C2TSMask = new Difractal.Entity(0,0,400,300);
 	C2TSMask.SetStrokeStyle("red");
 	C2TSMask.SetFillStyle("purple");
-	C2TSMask.SetText("It works!");
+	C2TSMask.SetText("It works! \n Click me");
+	C2TSMask.SetMultiline(true);
+	C2TSMask.MouseDown = function() {
+	   alert("You clicked on canvas 2!");
+	}
 	Canvas2TestState.Add(C2TSMask);
 	Difractal.Canvases["#canvas2"].Master.Push(Canvas2TestState);		
 	
@@ -182,43 +186,35 @@ $(document).ready(function () {
 	});
 	$(document).keydown(function(e) {
 		keys[e.which] = true;
-		Difractal.Canvases["#canvas"].CurrentState.KeyDownEvents(e);
+      for(var x in Difractal.Canvases) {	   
+		Difractal.Canvases[x].CurrentState.KeyDownEvents(e);
+	  }
 		e.preventDefault();
 	});	
 	
 	$(document).mouseup(function(e){
-		Difractal.Canvases["#canvas"].CurrentState.MouseUpEvents(e);
+      for(var x in Difractal.Canvases) {	   
+		Difractal.Canvases[x].CurrentState.MouseUpEvents(e);
+	  }
 	});	
 	
 	$(document).mousemove(function(e){
-		Difractal.Canvases["#canvas"].CurrentState.MouseMoveEvents(e);
+      for(var x in Difractal.Canvases) {	   
+		Difractal.Canvases[x].CurrentState.MouseMoveEvents(e);
+	  }
 	});	
 	
-	/*for(var x in Difractal.Canvases) {
-	  var $x = $(x);
-	  var _CanvasObject = Difractal.Canvases[x];
-	  
-		$x.click(function(e){
-		
-			_CanvasObject.CurrentState.ClickEvents(e);	
+	$.each(Difractal.Canvases, function(index,value){	
+	    console.log(value);
+		$(index).click(function(e){
+			Difractal.Canvases[index].CurrentState.ClickEvents(e);	
+		}).mousedown(function(e){
+			Difractal.Canvases[index].CurrentState.MouseDownEvents(e);
+           console.log(index);
 		});
-		
-		$x.mousedown(function(e){
-			_CanvasObject.CurrentState.MouseDownEvents(e);
-		});
-	}
-	*/
-	  var $x = $("#canvas");
-	  var _CanvasObject = Difractal.Canvases["#canvas"];
-	  
-		$x.click(function(e){
-		
-			_CanvasObject.CurrentState.ClickEvents(e);	
-		});
-		
-		$x.mousedown(function(e){
-			_CanvasObject.CurrentState.MouseDownEvents(e);
-		});
+
+	});
+	
 
 	$("#controls").click(function(e){
 		clickDetection(e, battlescreen.controls, "click");

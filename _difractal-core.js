@@ -8,7 +8,7 @@ Difractal.DrawRate = 33;
 Difractal.Difficulty = 50;
 Difractal.translation = {"x" : 0 , "y" : 0};
 Difractal.scale = {"x" : 1 , "y" : 1};
-Difractal.Canvases = [];
+Difractal.Canvases = {};
 
 Difractal.AddCanvas = function(selector){
 	var c = $(selector);
