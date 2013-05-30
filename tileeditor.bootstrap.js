@@ -1,128 +1,223 @@
-var Difractal = {};
-Difractal.GlobalNamespace = this;
-Difractal.Master = [];
-Difractal.CurrentState;
-Difractal.ctx;
-Difractal.c;
-Difractal.DrawRate = 33;
-Difractal.Difficulty = 50;
-Difractal.translation = {"x" : 0 , "y" : 0};
-Difractal.scale = {"x" : 1 , "y" : 1};
-Difractal.Canvases = {};
+/*Tricky but awesome function found on stack overflow*/
+function createArray(length) {
+    var arr = new Array(length || 0),
+        i = length;
 
-Difractal.AddCanvas = function(selector){
-	var c = $(selector);
-	var ctx = c[0].getContext("2d");
-	var CanvasObject = {"c" : c , "ctx" : ctx};
-	CanvasObject.Master = [];
-	CanvasObject.CurrentState = {};
-	CanvasObject.Master.Pop = function () {
-		this.pop();
-		var index = this.length-1;
-		CanvasObject.CurrentState = this[index];		
+    if (arguments.length > 1) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        while(i--) arr[length-1 - i] = createArray.apply(this, args);
+    }
+
+    return arr;
+}
+
+$(document).ready(function () {
+    /*Register Canvases */
+	Difractal.AddCanvas("#canvas");
+	
+	var tileditor = new Difractal.GameState();
+	tileditor.CanvasObject = Difractal.Canvases["#canvas"];
+	
+	tileditor.mousedown = false;
+	tileditor.MouseDownEvents = function(e) {
+		clickDetection(e,this,"mousedown");
+		this.mousedown = true;
+}
+	tileditor.MouseUpEvents = function(e) {
+	if(demoSprite.IsMouseDown() && demoSprite.TrackingSprite) {
+	   var tr = demoSprite.TrackingSprite.GetTranslation();
+	   demoSprite.SetTranslation(tr.x,tr.y);
+	   demoSprite.TrackingSprite.SetTranslation(-9999,-9999)
 	}
-	CanvasObject.Master.Push = function (state) {
-		this.push(state);
-		CanvasObject.CurrentState = state;
+		mouseUpDetection(e,this);
+		this.mousedown = false;
+		
 	}
-	CanvasObject.ClearCanvas = function (context, canvas) {
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		var w = canvas.width;
-		canvas.width = 1;
-		canvas.width = w;	
-	}
-	CanvasObject.Draw = function () {
-		CanvasObject.ClearCanvas(CanvasObject.ctx,CanvasObject.c);
-		CanvasObject.CurrentState.Draw(CanvasObject.ctx);	
-	}
-	CanvasObject.DrawEnabled = true;
-	Difractal.Canvases[selector] = CanvasObject;
-}
-
-/*
-Difractal.Master.Pop = function () {
-	this.pop();
-	var index = this.length-1;
-	Difractal.CurrentState = this[index];
-}
-
-Difractal.Master.Push = function () {
-	this.push(state);
-	Difractal.CurrentState = state;
-}
-
-Difractal.ClearCanvas = function (context, canvas) {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    var w = canvas.width;
-    canvas.width = 1;
-    canvas.width = w;
-}
 
 
-Difractal.Draw = function () {
-   Difractal.ClearCanvas(Difractal.Context,Difractal.CanvasRef);
-    Difractal.CurrentState.Draw(Difractal.Context);
-}
-*/
+	tileditor.MouseMoveEvents = function(e) {
+		mouseMoveDetection(e,this);
+	}	
+	
 
-
-//Update Loop
-
-Difractal.Update = function () {
-	Difractal.UpdateID = setInterval(function () {
-	 for(var x in Difractal.Canvases) {
-	    var _CanvasObject = Difractal.Canvases[x];
-	   if(_CanvasObject.DrawEnabled) {
-		_CanvasObject.Draw();
-	   }
-		_CanvasObject.CurrentState.Events();
-	 }
-	}, Difractal.DrawRate);
-};
-
-Difractal.SetDrawRate = function(r) {
-	Difractal.DrawRate = r;
-	clearInterval(Difractal.UpdateID);
-	Difractal.Update();
-}
-
-Difractal.Timer = function()
-{
- return {
-    start: -1,
-	end: -1,
-	Start: function() {
-		if(this.start == -1) {
-			this.start = new Date().getTime();
-			this.end = -1;
-			return this.start;
+	var width_tiles = 16;
+	var height_tiles = 16;
+	var square_length = 48;
+	
+	var CanvasBounds = new Difractal.Entity(0,0,square_length*width_tiles,square_length*height_tiles);
+	CanvasBounds.SetZIndex(0);
+	tileditor.Add(CanvasBounds);	
+	
+	
+	var tiles = createArray(width_tiles, height_tiles);
+	
+	for (var i = 0; i < width_tiles; i++) {
+		for (var j = 0; j < height_tiles; j++) {
+			tiles[i,j] = new Difractal.Entity(i*square_length,j*square_length,square_length,square_length);
+			tiles[i,j].SetFillStyle("rgba(255, 0, 255, 0.1)");
+			tiles[i,j].SetLineWidth("0");
+			//tiles[i,j].SetText("");
+			//tiles[i,j].SetTextColor("#000");
+			tiles[i,j].Action = function() { };
+			tiles[i,j].SetZIndex(2);
+			
+			
+			tileditor.AddRange([tiles[i,j]]);
 		}
-       return false;
-	},
-	Stop: function() {
-		if(this.start != -1 && this.end == -1) {
-			this.end = new Date().getTime();
-			return this.end;
-		}
-        return false;
-	},
-	GetElapsedInterval: function() {
-		if(this.start != -1 && this.end == -1) { 
-			var current = new Date().getTime();
-			return current - this.start;
-		}
-		return -1;
-	},
-	GetElapsedTime: function() {
-		if(this.start != -1 && this.end != -1) {
-			return this.end-this.start;
-		}
-		return -1;
-	},
-
-	Reset: function() {
-		this.start = -1;
-		this.end = -1;
 	}
-   }
-}
+	
+	//This demo sprite is twice the length and width of each tile
+	var demoSprite = new Difractal.Entity(0,0,square_length*3,square_length*3);
+	demoSprite.SetFillStyle("rgba(0, 255, 0, 0.3)");
+    demoSprite.SetLineWidth(0);
+	demoSprite.SetZIndex(10);
+	demoSprite.TrackingSprite = new Difractal.Entity(-9999,-9999,square_length*3,square_length*3);
+    demoSprite.TrackingSprite.SetFillStyle("rgba(125, 125, 255, 0.5)");
+    demoSprite.TrackingSprite.SetLineWidth(0);
+	demoSprite.TrackingSprite.SetZIndex(9);
+	
+	demoSprite.MouseMove = function(e) {
+		if(this.IsMouseDown()) {
+	
+			this.lastX = this.curX;
+			this.curX = e.offsetX;
+			this.lastY = this.curY;
+			this.curY = e.offsetY;	
+
+			var tr = this.GetTranslation();
+			var trX = e.offsetX - (this.relativeMDX);
+			var trY = e.offsetY - (this.relativeMDY);
+
+			if(trX < 0) {
+				trX = 0;
+			} 
+			else if(trX + this.GetDimensions().w > square_length*width_tiles) {
+				trX = square_length*width_tiles - this.GetDimensions().w;
+			} 
+			
+			if(trY < 0) {
+				trY = 0;
+			} 
+			else if(trY + this.GetDimensions().h > square_length*height_tiles) {
+				trY = square_length*height_tiles - this.GetDimensions().h;
+			}		
+
+			
+			this.SetTranslation(trX,trY);
+			 
+           		
+			
+		   var _entities = Difractal.Canvases["#canvas"].CurrentState.GetEntities();
+           var checkPT = {"x" : this.relativeMDX + trX, "y" : this.relativeMDY + trY };
+		   
+		   for(var y in _entities) {
+		     var x = _entities[y];
+			 var adjusted = false;
+		      if(x != this) {
+					if(x.Contains(checkPT.x,checkPT.y)) {
+					 var tr = x.GetTranslation();
+					 var trX = tr.x;
+					 var trY = tr.y;
+
+					if(tr.x + demoSprite.GetDimensions().w > width_tiles*square_length ) {
+					   trX = width_tiles*square_length - demoSprite.GetDimensions().w;
+					} 
+					else if(demoSprite.GetTranslation().x == 0) {
+					   trX = 0;
+					}
+										 
+					if(tr.y + demoSprite.GetDimensions().h > height_tiles*square_length) {
+					    trY = height_tiles*square_length - demoSprite.GetDimensions().h
+				     }
+					else if(demoSprite.GetTranslation().y == 0) {
+					   trY = 0;
+					}
+ 
+					 demoSprite.TrackingSprite.SetTranslation(trX,trY);
+					 
+
+				  } 
+			  }
+		   }
+		
+			
+			
+		}
+	}	
+	
+	tileditor.Add(demoSprite);
+	tileditor.Add(demoSprite.TrackingSprite);
+	Difractal.Canvases["#canvas"].Master.Push(tileditor);	
+	
+	
+	
+	
+	
+	/*Testing out the second canvas! */
+	//var Canvas2TestState = new Difractal.GameState();
+	//Canvas2TestState.CanvasObject = Difractal.Canvases["#canvas"];
+	//var C2TSMask = new Difractal.Entity(0,0,400,300);
+	//C2TSMask.SetStrokeStyle("red");
+	//C2TSMask.SetFillStyle("purple");
+	//C2TSMask.SetText("It works! \n Click me");
+	//C2TSMask.SetMultiline(true);
+	//C2TSMask.MouseDown = function() {
+	//   alert("You clicked on canvas 2!");
+	//}
+	//Canvas2TestState.Add(C2TSMask);
+	//Difractal.Canvases["#canvas2"].Master.Push(Canvas2TestState);		
+	
+
+	
+
+
+ });
+ 
+ $(document).ready(function(){
+ 
+ /////////////////////////////////////////////////////////////////////////	
+	//Global Listeners
+
+	var keys = [];
+
+	$(document).keyup(function(e) {
+		delete keys[e.which];
+	});
+	$(document).keydown(function(e) {
+		keys[e.which] = true;
+      for(var x in Difractal.Canvases) {	   
+		Difractal.Canvases[x].CurrentState.KeyDownEvents(e);
+	  }
+		e.preventDefault();
+	});	
+	
+	$(document).mouseup(function(e){
+      for(var x in Difractal.Canvases) {	   
+		Difractal.Canvases[x].CurrentState.MouseUpEvents(e);
+	  }
+	});	
+	
+	$(document).mousemove(function(e){
+      for(var x in Difractal.Canvases) {	   
+		Difractal.Canvases[x].CurrentState.MouseMoveEvents(e);
+	  }
+	});	
+	
+	$.each(Difractal.Canvases, function(index,value){	
+
+		$(index).click(function(e){
+			Difractal.Canvases[index].CurrentState.ClickEvents(e);	
+		}).mousedown(function(e){
+			Difractal.Canvases[index].CurrentState.MouseDownEvents(e);
+		});
+
+	});
+	
+
+	$("#controls").click(function(e){
+		clickDetection(e, battlescreen.controls, "click");
+	});
+	
+/////////////////////////////////////////////////////////////////////////////
+ Difractal.Update();
+ });
