@@ -2,7 +2,6 @@ Difractal.GameState = function(){
 	var entities = [];
 	var key = 0;
 
-
 	return {
 		Add: function(entity) {		
 			entity.key = "n" + key;
@@ -31,15 +30,17 @@ Difractal.GameState = function(){
 			return false;
 		},
 		ClickEvents: function(e) {
-			clickDetection(e,false,"click");
+			clickDetection(e,this,"click");
 		},
-		MouseDownEvents: function() {
-		    return false;
+		MouseDownEvents: function(e) {
+			clickDetection(e,this,"mousedown");
+			this.mousedown = true;
 		},
-		MouseUpEvents: function() {
-			return false;
+		MouseUpEvents: function(e) {
+			mouseUpDetection(e,this);
+			this.mousedown = false;
 		},
-		MouseMoveEvents: function() {
+		MouseMoveEvents: function(e) {
 			return false;
 		},
 		Draw: function(ctx) {
