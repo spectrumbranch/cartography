@@ -19,7 +19,7 @@ Difractal.AddCanvas = function(selector){
 	CanvasObject.Master.Pop = function () {
 		this.pop();
 		var index = this.length-1;
-		CanvasObject.CurrentState = this[index];		
+		CanvasObject.CurrentState = this[index];
 	}
 	CanvasObject.Master.Push = function (state) {
 		this.push(state);
@@ -33,7 +33,7 @@ Difractal.AddCanvas = function(selector){
 	}
 	CanvasObject.Draw = function () {
 		CanvasObject.ClearCanvas(CanvasObject.ctx,CanvasObject.c);
-		CanvasObject.CurrentState.Draw(CanvasObject.ctx);	
+		CanvasObject.CurrentState.Draw(CanvasObject.ctx);
 	}
 	CanvasObject.DrawEnabled = true;
 	Difractal.Canvases[selector] = CanvasObject;
