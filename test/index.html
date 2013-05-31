@@ -7,8 +7,14 @@
 <body>
   <div id="mocha"></div>
   <script src="../jquery-1.7.1.js"></script>
+  <script>
+      function assert(expr, msg) {
+        if (!expr) throw new Error(msg || 'failed');
+      }
+    </script>
   <script src="expect-0.2.0.js"></script>
   <script src="mocha-1.10.0.js"></script>
+  
   <script>mocha.setup('bdd')</script>
   <!--
   <script src="test.array.js"></script>
