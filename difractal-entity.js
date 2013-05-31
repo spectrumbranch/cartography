@@ -262,14 +262,19 @@ Difractal.Entity = function(x, y, w, h) {
 	  Action: function(){return false;},
 	  MouseDown: function(e) {
 		 mousedown = true;
-		 this.lastX = e.offsetX;
-		 this.lastY = e.offsetY;
-		 this.curX = e.offsetX;
-		 this.curY = e.offsetY;
-		 this.mdX = e.offsetX;
-		 this.mdY = e.offsetY;
+		 this.lastX = e.pageX;
+		 this.lastY = e.pageY;
+		 this.curX = e.pageX;
+		 this.curY = e.pageY;
+		 this.mdX = e.pageX;
+		 this.mdY = e.pageY;
+		 
 		 this.relativeMDX = e.offsetX - translation.x;
 		 this.relativeMDY = e.offsetY - translation.y;
+		 
+		 this.relativeMDX2 = e.pageX - translation.x;
+		 this.relativeMDY2 = e.pageY - translation.y;
+		 
 		 this.maskTrX = translation.x;
 		 this.maskTrY = translation.y;
 	  },
