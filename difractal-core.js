@@ -64,9 +64,45 @@ Difractal.Draw = function () {
     Difractal.CurrentState.Draw(Difractal.Context);
 }
 */
+Difractal.Start = function () {
+	//Bimd Global Listeners
 
+	var keys = [];
 
-//Update Loop
+	$(document).keyup(function(e) {
+		delete keys[e.which];
+	});
+	$(document).keydown(function(e) {
+		keys[e.which] = true;
+		for (var x in Difractal.Canvases) {
+			Difractal.Canvases[x].CurrentState.KeyDownEvents(e);
+		}
+		e.preventDefault();
+	});	
+	
+	$(document).mouseup(function(e) {
+		for (var x in Difractal.Canvases) {
+			Difractal.Canvases[x].CurrentState.MouseUpEvents(e);
+		}
+	});	
+	
+	$(document).mousemove(function(e) {
+		for (var x in Difractal.Canvases) {
+			Difractal.Canvases[x].CurrentState.MouseMoveEvents(e);
+		}
+	});	
+	
+	$.each(Difractal.Canvases, function(index,value) {
+		$(index).click(function(e) {
+			Difractal.Canvases[index].CurrentState.ClickEvents(e);
+		}).mousedown(function(e) {
+			Difractal.Canvases[index].CurrentState.MouseDownEvents(e);
+		});
+	});
+	
+	//Start it up
+	Difractal.Update();
+};
 
 Difractal.Update = function () {
 	Difractal.UpdateID = setInterval(function () {
@@ -84,45 +120,4 @@ Difractal.SetDrawRate = function(r) {
 	Difractal.DrawRate = r;
 	clearInterval(Difractal.UpdateID);
 	Difractal.Update();
-}
-
-Difractal.Timer = function()
-{
- return {
-    start: -1,
-	end: -1,
-	Start: function() {
-		if(this.start == -1) {
-			this.start = new Date().getTime();
-			this.end = -1;
-			return this.start;
-		}
-       return false;
-	},
-	Stop: function() {
-		if(this.start != -1 && this.end == -1) {
-			this.end = new Date().getTime();
-			return this.end;
-		}
-        return false;
-	},
-	GetElapsedInterval: function() {
-		if(this.start != -1 && this.end == -1) { 
-			var current = new Date().getTime();
-			return current - this.start;
-		}
-		return -1;
-	},
-	GetElapsedTime: function() {
-		if(this.start != -1 && this.end != -1) {
-			return this.end-this.start;
-		}
-		return -1;
-	},
-
-	Reset: function() {
-		this.start = -1;
-		this.end = -1;
-	}
-   }
 }
