@@ -41,8 +41,13 @@ $(document).ready(function () {
 	Cartography.PaletteBounds.SetZIndex(0);
 	Cartography.TiledMap.Add(Cartography.PaletteBounds);
 	
+	var CanvasBounds = new Difractal.Entity(0,0,palette_x_origin + square_length*palette_width_tiles, palette_y_origin + square_length*palette_height_tiles);
+	CanvasBounds.SetLineWidth(0);
+	Cartography.TiledMap.Add(CanvasBounds);
+	
 	//Create tile editor map portion, calculated to be 768px at current config
 	var tiles = Cartography.createArray(width_tiles, height_tiles);
+	var _tiles = [];
 	for (var i = 0; i < width_tiles; i++) {
 		for (var j = 0; j < height_tiles; j++) {
 			tiles[i,j] = new Difractal.Entity(map_x_origin+i*square_length,map_y_origin+j*square_length,square_length,square_length);
@@ -51,6 +56,7 @@ $(document).ready(function () {
 			tiles[i,j].Action = function() { };
 			tiles[i,j].SetZIndex(2);
 			
+			_tiles.push(tiles[i,j]);
 			Cartography.TiledMap.AddRange([tiles[i,j]]);
 		}
 	}
@@ -74,7 +80,7 @@ $(document).ready(function () {
 	var tileSelectorHeight = square_length * tileSelectorScale;
 	var tileSelectorWidth = square_length * tileSelectorScale;
 	
-	var SelectorSprite = new Difractal.Entity(0,0,tileSelectorWidth,tileSelectorHeight);
+	var SelectorSprite = new Difractal.Entity(palette_x_origin,palette_y_origin,tileSelectorWidth,tileSelectorHeight);
 	SelectorSprite.SetFillStyle("rgba(0, 255, 0, 0.3)");
     SelectorSprite.SetLineWidth(0);
 	SelectorSprite.SetZIndex(10);
@@ -86,35 +92,48 @@ $(document).ready(function () {
 	SelectorSprite.MouseMove = function(e) {
 		if (this.IsMouseDown()) {
 			this.lastX = this.curX;
-			this.curX = e.offsetX;
+			this.curX = e.pageX;
 			this.lastY = this.curY;
-			this.curY = e.offsetY;
+			this.curY = e.pageY;
 
 			var tr = this.GetTranslation();
-			var trX = e.offsetX - (this.relativeMDX);
-			var trY = e.offsetY - (this.relativeMDY);
+			var trX = e.pageX - (this.relativeMDX2);
+			var trY = e.pageY - (this.relativeMDY2);
 
 			if (trX < 0) {
 				trX = 0;
-			} else if (trX + this.GetDimensions().w > square_length*width_tiles) {
-				trX = square_length*width_tiles - this.GetDimensions().w;
+			} else if (trX + this.GetDimensions().w >= CanvasBounds.GetTranslation().x + CanvasBounds.GetDimensions().w) {
+				trX = CanvasBounds.GetTranslation().x + CanvasBounds.GetDimensions().w - this.GetDimensions().w;
 			} 
 			
 			if (trY < 0) {
 				trY = 0;
-			} else if (trY + this.GetDimensions().h > square_length*height_tiles) {
-				trY = square_length*height_tiles - this.GetDimensions().h;
+			} else if (trY + this.GetDimensions().h > CanvasBounds.GetTranslation().y + CanvasBounds.GetDimensions().h) {
+				trY = CanvasBounds.GetTranslation().y + CanvasBounds.GetDimensions().h;
 			}		
 
 			this.SetTranslation(trX,trY);
 
-			var _entities = Difractal.Canvases[cnv].CurrentState.GetEntities();
 			var checkPT = {"x" : this.relativeMDX + trX, "y" : this.relativeMDY + trY };
+
+		  var corners = SelectorSprite.GetCorners();
+		  var onmap = false;
+		   for(var index in corners) {
+		     var pt = corners[index];
+		      if(Cartography.MapBounds.Contains(pt.x,pt.y)) {
+                  onmap = true;
+                  break;				  
+			  }
+		   }
+		   if(!onmap) {
+			  SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999);
+		      return;
+		   }
 		   
-			for (var y in _entities) {
-				var x = _entities[y];
-				var adjusted = false;
+			for(var y in _tiles) {
+				var x = _tiles[y];
 				if (x != this) {
+
 					if (x.Contains(checkPT.x,checkPT.y)) {
 						var tr = x.GetTranslation();
 						var trX = tr.x;
@@ -138,10 +157,26 @@ $(document).ready(function () {
 		}
 	}
 	Cartography.TiledMap.MouseUpEvents = function(e) {
-		if (SelectorSprite.IsMouseDown() && SelectorSprite.TileSnapSprite) {
+		if (SelectorSprite.IsMouseDown() && SelectorSprite.TileSnapSprite){
+		  var corners = SelectorSprite.GetCorners();
+		  var fulfill = false;
+		   for(var index in corners) {
+		     var pt = corners[index];
+		      if(Cartography.MapBounds.Contains(pt.x,pt.y)) {
+                  fulfill = true;
+                  break;				  
+			  }
+		   }
+		   if(fulfill) {
 			var tr = SelectorSprite.TileSnapSprite.GetTranslation();
+		    SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)		
 			SelectorSprite.SetTranslation(tr.x,tr.y);
-			SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)
+			} else {
+			
+				  SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)		
+			      SelectorSprite.SetTranslation(palette_x_origin,palette_y_origin);				
+			}
+
 		}
 		mouseUpDetection(e,this);
 		this.mousedown = false;
