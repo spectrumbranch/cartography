@@ -13,8 +13,8 @@ The ```master.json file``` describes the tileset and must have matching ```id```
 Example ```tilesets.json``` file:
 
 ```
- {
-  tilesets: [
+{
+	tilesets: [
 		{ 
 			tileset_id: 1,
 			location: './robots/master.json'
@@ -24,7 +24,7 @@ Example ```tilesets.json``` file:
 			location: './grasslands'
 		}
 	]
- }
+}
 
 ```
 
@@ -38,48 +38,46 @@ Example ```master.json``` file:
 		creator: 'cbebry'
 	},
 	tiles: [
-	{
-		tile_id: 0,
-		img_url: 'floor.png'
-	},
-	{
-		tile_id: 1,
-		img_url: 'structure_topleft_corner.png'
-	},
-	{
-		tile_id: 2,
-		img_url: 'structure_top.png'
-	},
-	{
-		tile_id: 3,
-		img_url: 'structure_topright_corner.png'
-	},
-	{
-		tile_id: 4,
-		img_url: 'structure_left.png'
-	},
-	{
-		tile_id: 5,
-		img_url: 'structure_middle.png'
-	},
-	{
-		tile_id: 6,
-		img_url: 'structure_right.png'
-	},
-	{
-		tile_id: 7,
-		img_url: 'structure_bottomleft_corner.png'
-	},
-	{
-		tile_id: 8,
-		img_url: 'structure_bottom.png'
-	},
-	{
-		tile_id: 9,
-		img_url: 'structure_bottomright_corner.png'
-	}
-
-		
+		{
+			tile_id: 0,
+			img_url: 'floor.png'
+		},
+		{
+			tile_id: 1,
+			img_url: 'structure_topleft_corner.png'
+		},
+		{
+			tile_id: 2,
+			img_url: 'structure_top.png'
+		},
+		{
+			tile_id: 3,
+			img_url: 'structure_topright_corner.png'
+		},
+		{
+			tile_id: 4,
+			img_url: 'structure_left.png'
+		},
+		{
+			tile_id: 5,
+			img_url: 'structure_middle.png'
+		},
+		{
+			tile_id: 6,
+			img_url: 'structure_right.png'
+		},
+		{
+			tile_id: 7,
+			img_url: 'structure_bottomleft_corner.png'
+		},
+		{
+			tile_id: 8,
+			img_url: 'structure_bottom.png'
+		},
+		{
+			tile_id: 9,
+			img_url: 'structure_bottomright_corner.png'
+		}
 	]
 }
 ```

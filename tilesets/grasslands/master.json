@@ -1,0 +1,29 @@
+{
+	id: 1,
+	description: 'grasslands tileset',
+	meta_data: {
+		creator: 'cbebry'
+	},
+	tiles: [
+		{
+			tile_id: 0,
+			img_url: 'path.png'
+		},
+		{
+			tile_id: 1,
+			img_url: 'shrubery.png'
+		},
+		{
+			tile_id: 2,
+			img_url: 'rock.png'
+		},
+		{
+			tile_id: 3,
+			img_url: 'yellow_flower.png'
+		},
+		{
+			tile_id: 4,
+			img_url: 'grass.png'
+		}
+	]
+}

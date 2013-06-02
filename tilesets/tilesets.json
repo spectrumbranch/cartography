@@ -1,0 +1,12 @@
+ {
+	tilesets: [
+		{ 
+			tileset_id: 1,
+			location: './robots/master.json'
+		},
+		{
+			tileset_id: 2,
+			location: './grasslands'
+		}
+	]
+ }
