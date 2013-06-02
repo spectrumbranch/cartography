@@ -1,8 +1,8 @@
-Rough mobile written docs. Will clean up.
------------------------------------------
+API Reference
+=============
 
-Loading tilesets
-================
+Creating Tilesets
+-----------------
 
 Cartography can load tilesets from AJAX accessible urls. 
 The set of available tilesets can be found in ```tilesets.json```. Tilesets.json has a list of ```tilesets``` as an array of name-value pairs of ```tileset_id``` and ```location```. It is important for ```tileset_id``` to be unique and of integer type, and ```location``` can be a url of a ```master.json``` tileset file or its enclosing directory.
