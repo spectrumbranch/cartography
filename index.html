@@ -12,9 +12,88 @@
 	<script src="js/vendor/custom.modernizr.js"></script>
 </head>
 <body>
-<div class="row">
-	<h3>Cartography</h3>
-</div>
+	<nav class="top-bar">
+		<ul class="title-area">
+			<!-- Title Area -->
+			<li class="name">
+			  <h1><a href="#">Cartography</a></h1>
+			</li>
+			<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+			<li class="toggle-topbar menu-icon"><a href=""><span>Menu</span></a></li>
+		</ul>
+		
+		
+		
+		<section class="top-bar-section">
+			<ul class="left">
+				<li class="divider"></li>
+				<li class="has-dropdown"><a href="#">Home</a>
+					<ul class="dropdown"><li class="title back js-generated"><h5><a href="#">« Back</a></h5></li>
+						<li><label>Home</label></li>
+						<li><a href="#">Link1</a></li>
+						<li><a href="#">Link2</a></li>
+					</ul>
+				</li>
+				<li class="divider"></li>
+				<li class="has-dropdown"><a href="#">LinkA</a>
+					<ul class="dropdown"><li class="title back js-generated"><h5><a href="#">« Back</a></h5></li>
+						<li><label>LinkA</label></li>
+						<li><a href="#">LinkA1</a></li>
+					</ul>
+				</li>
+				<li class="divider"></li>
+			</ul>
+			
+			<ul class="right">
+		<!--
+				  <li class="divider hide-for-small"></li>
+				  <li class="has-dropdown"><a href="#">UserName</a>
+					<ul class="dropdown"><li class="title back js-generated"><h5><a href="#">« Back</a></h5></li>
+						<li><a href="#">Profile</a></li>
+						<li><a href="#">Logout</a></li>
+					</ul>
+				  </li>
+		-->
+					<li class="divider hide-for-small"></li>
+					<li>
+						<form 	id="login_form" 
+								action="#" 
+								method="post" 
+								accept-charset="utf-8" 
+							>
+							<div class="row">
+								<div class="large-12 columns">
+									<div class="row collapse">
+										<div class="small-5 columns">
+										  <input type="text" placeholder="username" name="user" />
+										</div>
+										<div class="small-5 columns">
+										  <input type="password" placeholder="password" name="passwrd" />
+										</div>
+										<div class="small-2 columns">
+										  <input type="submit" href="#" class="button prefix" value="Login" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</li>
+					<li>
+						<div class="row">
+						<div class="large-12 columns">
+							<div class="row collapse">
+								<input type="submit" href="#" class="button prefix" value="Register" style="max-width:100px" />
+							</div>
+						</div>
+						</div>
+					</li>
+			</ul>
+		</section>
+	</nav>
+
+
+
+
 <div class="row" style="min-height:800px;">
 	<canvas id="canvas"></canvas>
 </div>
@@ -32,6 +111,20 @@
 <script type="text/javascript" src="cartography.core.js"></script>
 <script type="text/javascript" src="cartography.util.js"></script>
 <script type="text/javascript" src="cartography.bootstrap.js"></script>
+
+<script>
+  document.write('<script src=js/vendor/'
+	+ ('__proto__' in {} ? 'zepto' : 'jquery')
+	+ '.js><\/script>');
+</script>
+<script src="js/foundation/foundation.js"></script>
+<script src="js/foundation/foundation.topbar.js"></script>
+<script src="js/foundation/foundation.forms.js"></script>
+<script>
+  $(function(){
+    $(document).foundation();    
+  })
+</script>
 
 </body>
 </html>

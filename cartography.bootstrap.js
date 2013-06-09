@@ -156,25 +156,23 @@ $(document).ready(function () {
 	}
 	Cartography.TiledMap.MouseUpEvents = function(e) {
 		if (SelectorSprite.IsMouseDown() && SelectorSprite.TileSnapSprite){
-		  var corners = SelectorSprite.GetCorners();
-		  var fulfill = false;
-		   for(var index in corners) {
-		     var pt = corners[index];
-		      if(Cartography.MapBounds.Contains(pt.x,pt.y)) {
-                  fulfill = true;
-                  break;				  
-			  }
-		   }
-		   if(fulfill) {
-			var tr = SelectorSprite.TileSnapSprite.GetTranslation();
-		    SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)		
-			SelectorSprite.SetTranslation(tr.x,tr.y);
-			} else {
-			
-				  SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)		
-			      SelectorSprite.SetTranslation(palette_origin.x,palette_origin.y);				
+			var corners = SelectorSprite.GetCorners();
+			var fulfill = false;
+			for(var index in corners) {
+				var pt = corners[index];
+				if(Cartography.MapBounds.Contains(pt.x,pt.y)) {
+					fulfill = true;
+					break;				  
+				}
 			}
-
+			if(fulfill) {
+				var tr = SelectorSprite.TileSnapSprite.GetTranslation();
+				SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)		
+				SelectorSprite.SetTranslation(tr.x,tr.y);
+			} else {
+				SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)		
+				SelectorSprite.SetTranslation(palette_origin.x,palette_origin.y);				
+			}
 		}
 		mouseUpDetection(e,this);
 		this.mousedown = false;

@@ -65,8 +65,8 @@ Difractal.Draw = function () {
 }
 */
 Difractal.Start = function () {
-	//Bimd Global Listeners
-
+	//Bind Global Listeners
+	/*
 	var keys = [];
 
 	$(document).keyup(function(e) {
@@ -79,7 +79,7 @@ Difractal.Start = function () {
 		}
 		e.preventDefault();
 	});	
-	
+	*/
 	$(document).mouseup(function(e) {
 		for (var x in Difractal.Canvases) {
 			Difractal.Canvases[x].CurrentState.MouseUpEvents(e);
