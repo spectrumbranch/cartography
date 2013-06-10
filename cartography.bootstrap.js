@@ -18,6 +18,70 @@ $(document).ready(function () {
 		mouseMoveDetection(e,this);
 	}
 	
+	Cartography.TiledMap.ClickEvents = function(e) {
+		clickDetection(e,this,"click");
+		this.mousedown = true;
+	}
+	Cartography.TiledMap.SelectionRegion = {};
+	Cartography.TiledMap.SelectionRegion.Started = false;
+	//Corners are top left
+	Cartography.TiledMap.SelectionRegion.StartCorner = {};	
+	Cartography.TiledMap.SelectionRegion.EndCorner = {};	
+	Cartography.TiledMap.SelectionRegion.PreviewBox = new Difractal.Entity(0,0,0,0);
+	Cartography.TiledMap.SelectionRegion.PreviewBox.SetFillStyle("rgba(123, 123, 123, 0.5)");
+	Cartography.TiledMap.SelectionRegion.PreviewBox.DrawEnabled = false;
+	Cartography.TiledMap.Add(Cartography.TiledMap.SelectionRegion.PreviewBox);
+	
+	Cartography.TiledMap.KeyDownEvents = function(e) {
+	   if(!Cartography.TiledMap.SelectionRegion.Started && e.which == 16) {
+	     var tr = CursorSprite.GetTranslation();
+		 var d = CursorSprite.GetDimensions();
+		 if(CursorSprite.Active && Cartography.MapBounds.Contains(tr.x,tr.y)	) {	
+              Cartography.TiledMap.SelectionRegion.Started = true;  
+		      Cartography.TiledMap.SelectionRegion.StartCorner = {x : tr.x , y : tr.y};
+              Cartography.TiledMap.SelectionRegion.PreviewBox.DrawEnabled = true;
+              Cartography.TiledMap.SelectionRegion.PreviewBox.SetTranslation(tr.x,tr.y);	
+              Cartography.TiledMap.SelectionRegion.PreviewBox.SetDimensions(d.w,d.h);				  
+		  }
+         
+	   }
+	}
+	
+	Cartography.TiledMap.KeyUpEvents = function(e) {
+	   if(e.which == 16 && Cartography.TiledMap.SelectionRegion.Started ) {
+	      Cartography.TiledMap.SelectionRegion.Started = false; 
+          Cartography.TiledMap.SelectionRegion.PreviewBox.DrawEnabled = false;			  
+		  var tr = CursorSprite.GetTranslation();
+		  if(! (CursorSprite.Active && Cartography.MapBounds.Contains(tr.x,tr.y) ) ) {
+             return;
+		  }		  
+		  var d = CursorSprite.GetDimensions();
+		  Cartography.TiledMap.SelectionRegion.EndCorner = {x : tr.x , y : tr.y};	
+          Cartography.TiledMap.SelectionRegion.Dimensions = Cartography.TiledMap.SelectionRegion.PreviewBox.GetDimensions();
+
+		     var topleft = Cartography.TiledMap.SelectionRegion.PreviewBox.GetTranslation();
+			 
+			for(var i = 0; i < Cartography.TiledMap.SelectionRegion.Dimensions.w/d.w; i++) {
+			   
+			    for(var j = 0; j < Cartography.TiledMap.SelectionRegion.Dimensions.h/d.h; j++) {
+			   
+			      var translation = {
+				     x : topleft.x + i*d.w,
+					 y:  topleft.y + j*d.h
+				  };
+
+				   var fillstyle = CursorSprite.GetFillStyle();
+				   var TileDown = new Difractal.Entity(translation.x,translation.y,d.w,d.h);
+				   TileDown.SetFillStyle(fillstyle);
+				   TileDown.SetZIndex(5);
+	   
+				  Cartography.TiledMap.Add(TileDown);
+				  
+			    }
+			}
+	    }	   
+	}
+	
 	//"Configurables"
 	var square_length = Cartography.Config.tile_side_length;
 	
@@ -32,6 +96,7 @@ $(document).ready(function () {
 	var palette_origin = new Difractal.Vector2D(800,0);
 
 	Cartography.MapBounds = new Difractal.Entity(map_origin.x,map_origin.y,square_length*width_tiles,square_length*height_tiles);
+	Cartography.MapBounds.SetFillStyle("rgba(0, 0, 0, 0)");
 	Cartography.MapBounds.SetZIndex(0);
 	Cartography.TiledMap.Add(Cartography.MapBounds);
 	
@@ -52,8 +117,7 @@ $(document).ready(function () {
 			tiles[i,j].SetFillStyle("rgba(255, 0, 255, 0.1)");
 			tiles[i,j].SetLineWidth("0");
 			tiles[i,j].Action = function() { };
-			tiles[i,j].SetZIndex(2);
-			
+			tiles[i,j].SetZIndex(2);		
 			_tiles.push(tiles[i,j]);
 			Cartography.TiledMap.AddRange([tiles[i,j]]);
 		}
@@ -82,11 +146,82 @@ $(document).ready(function () {
 	SelectorSprite.SetFillStyle("rgba(0, 255, 0, 0.3)");
     SelectorSprite.SetLineWidth(0);
 	SelectorSprite.SetZIndex(10);
-	SelectorSprite.TileSnapSprite = new Difractal.Entity(-9999,-9999,tileSelectorWidth,tileSelectorHeight);
+	
+	/*SelectorSprite.TileSnapSprite = new Difractal.Entity(-9999,-9999,tileSelectorWidth,tileSelectorHeight);
     SelectorSprite.TileSnapSprite.SetFillStyle("rgba(125, 125, 255, 0.5)");
     SelectorSprite.TileSnapSprite.SetLineWidth(0);
-	SelectorSprite.TileSnapSprite.SetZIndex(9);
+	SelectorSprite.TileSnapSprite.SetZIndex(9);*/
 	
+    var CursorSprite = new Difractal.Entity(0,0,square_length * tileSelectorScale,square_length * tileSelectorScale);
+	CursorSprite.Active = false;
+    CursorSprite.MouseMoveActive = false;
+	CursorSprite.DrawEnabled = false;
+	CursorSprite.SetZIndex(4);
+   CursorSprite.MouseMove = function(e) {
+	   
+	   if(CursorSprite.Active && Cartography.MapBounds.Contains(e.offsetX,e.offsetY)) {
+		  CursorSprite.DrawEnabled = true;
+		  var dim = CursorSprite.GetDimensions();
+		  CursorSprite.SetTranslation( Math.floor(e.offsetX / dim.w) * dim.w , Math.floor(e.offsetY / dim.h) * dim.h );
+		  
+		  //If holding down shift, show selection region
+		  if(Cartography.TiledMap.SelectionRegion.Started) {
+			  var startCorner = Cartography.TiledMap.SelectionRegion.StartCorner; 
+			  var tr = CursorSprite.GetTranslation();
+			  var d = CursorSprite.GetDimensions();
+			  var endCorner = {x : tr.x , y : tr.y};	
+			  
+			  var width = Math.abs(endCorner.x - startCorner.x) + d.w;
+			  var height = Math.abs(endCorner.y - startCorner.y) + d.h;
+			  if(width > 0 && height > 0 ) {
+				 var topleft = {
+					x : Math.min(endCorner.x, startCorner.x),
+					y : Math.min(endCorner.y, startCorner.y),				
+				 }
+				 Cartography.TiledMap.SelectionRegion.PreviewBox.SetTranslation(topleft.x,topleft.y);
+				 Cartography.TiledMap.SelectionRegion.PreviewBox.SetDimensions(width,height);
+			  }
+		}
+		  
+		  
+	   } else {
+		  CursorSprite.DrawEnabled = false;
+	   }
+	
+	}	
+	
+	SelectorSprite.Click = function(e) {
+
+
+	   //pseudo sprite copy
+	   var fillstyle = SelectorSprite.GetFillStyle();
+	   CursorSprite.SetFillStyle(fillstyle);
+	   CursorSprite.Active = true;
+       CursorSprite.MouseMoveActive = true;
+	   CursorSprite.DrawEnabled = false;
+	   Cartography.MapBounds.SetZIndex(10);
+	   
+	}
+	
+	Cartography.MapBounds.Click = function(e) {
+	   if(CursorSprite.Active) {
+  
+		   //pseudo sprite copy
+		   var d = CursorSprite.GetDimensions();
+		   var fillstyle = CursorSprite.GetFillStyle();
+		   var tr = CursorSprite.GetTranslation();
+		   var TileDown = new Difractal.Entity(tr.x,tr.y,d.w,d.h);
+		   TileDown.SetFillStyle(fillstyle);
+		   TileDown.SetZIndex(5);
+	   
+		  Cartography.TiledMap.Add(TileDown);
+	   }
+	}
+	
+
+
+	
+	/*
 	SelectorSprite.MouseMove = function(e) {
 		if (this.IsMouseDown()) {
 			this.lastX = this.curX;
@@ -154,6 +289,8 @@ $(document).ready(function () {
 			}
 		}
 	}
+	*/
+	/*
 	Cartography.TiledMap.MouseUpEvents = function(e) {
 		if (SelectorSprite.IsMouseDown() && SelectorSprite.TileSnapSprite){
 			var corners = SelectorSprite.GetCorners();
@@ -176,11 +313,17 @@ $(document).ready(function () {
 		}
 		mouseUpDetection(e,this);
 		this.mousedown = false;
-	}
+	}*/
+
+
 	
 	Cartography.TiledMap.Add(SelectorSprite);
-	Cartography.TiledMap.Add(SelectorSprite.TileSnapSprite);
+	Cartography.TiledMap.Add(CursorSprite);
+	Cartography.TiledMap.Add(Cartography.TiledMap.SelectionRegion.PreviewBox);
+	previewbox = Cartography.TiledMap.SelectionRegion.PreviewBox;
+	//Cartography.TiledMap.Add(SelectorSprite.TileSnapSprite);
 	Difractal.Canvases[cnv].Master.Push(Cartography.TiledMap);
 
 	Difractal.Start();
  });
+ var previewbox;

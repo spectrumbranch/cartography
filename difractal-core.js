@@ -66,20 +66,23 @@ Difractal.Draw = function () {
 */
 Difractal.Start = function () {
 	//Bind Global Listeners
-	/*
-	var keys = [];
+	
+	Difractal.keys = [];
 
 	$(document).keyup(function(e) {
-		delete keys[e.which];
+		delete Difractal.keys[e.which];
+		for (var x in Difractal.Canvases) {
+			Difractal.Canvases[x].CurrentState.KeyUpEvents(e);
+		}
 	});
 	$(document).keydown(function(e) {
-		keys[e.which] = true;
+		Difractal.keys[e.which] = true;
 		for (var x in Difractal.Canvases) {
 			Difractal.Canvases[x].CurrentState.KeyDownEvents(e);
 		}
-		e.preventDefault();
+		//e.preventDefault();
 	});	
-	*/
+	
 	$(document).mouseup(function(e) {
 		for (var x in Difractal.Canvases) {
 			Difractal.Canvases[x].CurrentState.MouseUpEvents(e);

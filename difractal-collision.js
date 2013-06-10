@@ -39,7 +39,7 @@
 				switch(event) 
 				{
 					case "click" :
-						_entities[index].Click();
+						_entities[index].Click(e);
 						break;
 					case "mousedown":
 						_entities[index].MouseDown(e);
@@ -63,7 +63,7 @@
 			var zindex;
 			var index;
 			for (var key in _entities) {
-				if (_entities[key].IsMouseDown()) {
+				if (_entities[key].IsMouseDown() || _entities[key].MouseMoveActive) {
 					if (_entities[key].GetZIndex() >= zindex || typeof (index) == "undefined") {
 						zindex = _entities[key].GetZIndex();
 						index = key;

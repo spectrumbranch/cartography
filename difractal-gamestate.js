@@ -29,6 +29,9 @@ Difractal.GameState = function(){
 		KeyDownEvents: function(e) {
 			return false;
 		},
+		KeyUpEvents: function(e) {
+			return false;
+		},
 		ClickEvents: function(e) {
 			clickDetection(e,this,"click");
 		},
