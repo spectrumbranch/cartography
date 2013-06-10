@@ -159,7 +159,7 @@ $(document).ready(function () {
 	CursorSprite.SetZIndex(4);
    CursorSprite.MouseMove = function(e) {
 	   
-	   if(CursorSprite.Active && Cartography.MapBounds.Contains(e.offsetX,e.offsetY)) {
+	   if(CursorSprite.Active && Cartography.MapBounds.Contains(e.offsetX,e.offsetY) && e.target == Cartography.TiledMap.CanvasObject.c[0]) {
 		  CursorSprite.DrawEnabled = true;
 		  var dim = CursorSprite.GetDimensions();
 		  CursorSprite.SetTranslation( Math.floor(e.offsetX / dim.w) * dim.w , Math.floor(e.offsetY / dim.h) * dim.h );
