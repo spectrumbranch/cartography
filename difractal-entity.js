@@ -7,18 +7,19 @@ Difractal.Entity = function(x, y, w, h) {
 	var strokeStyle = "black";
 	var rotation = 0;
 	var rotateStyle = "center";
+
 	var scale = {
 	   x: 1,
 	   y: 1
 	};
 	var translation = {
-	   x: x,
-	   y: y
+	   "x": x,
+	   "y": y
 	};
 	var zindex = 1;
 	var dimensions = {
-	   w: w,
-	   h: h
+	   "w" : w,
+	   "h" : h
 	};
 	var text = "";
 	var textcolor = "#000";
@@ -28,6 +29,7 @@ Difractal.Entity = function(x, y, w, h) {
 	var mousedown = false;
 	
 	return {
+	    DrawEnabled: true,	
 		GetBounds: function() {
 			var bounds = {"minX" : Infinity, "minY" : Infinity , "maxX" : -Infinity, "maxY" : -Infinity};
 			var coords = this.GetCorners();
@@ -149,6 +151,13 @@ Difractal.Entity = function(x, y, w, h) {
 	   GetZIndex: function () {
 		  return zindex;
 	   },
+	   
+	   SetDimensions: function(a,b) {
+	      dimensions = {
+		  "w" : a ,
+		  "h" : b
+		  };
+	   },
 	   SetFillStyle: function (n) {
 		  fillStyle = n;
 	   },
@@ -198,6 +207,9 @@ Difractal.Entity = function(x, y, w, h) {
 		  zindex = n;
 	   },
 	   draw: function (c) {
+	    if(!this.DrawEnabled) {
+		   return false;;
+		}
 		  c.save();
 		  c.beginPath();
 		  c.fillStyle = fillStyle;
@@ -205,9 +217,9 @@ Difractal.Entity = function(x, y, w, h) {
 		  c.strokeStyle = strokeStyle;
 		 
 		 if(rotateStyle == "center") {
-			  c.translate(translation.x + w/2, translation.y + h/2);
+			  c.translate(translation.x + dimensions.w/2, translation.y + dimensions.h/2);
 			  c.rotate(rotation);
-			  c.translate(-(translation.x + w/2), -(translation.y + h/2));	
+			  c.translate(-(translation.x + dimensions.w/2), -(translation.y + dimensions.h/2));	
 		  } else if(rotateStyle == "topleft"){
 		    c.translate(translation.x, translation.y);
 			c.rotate(rotation);  
@@ -219,7 +231,7 @@ Difractal.Entity = function(x, y, w, h) {
 		  
 		  c.translate(translation.x, translation.y);
 		  c.scale(scale.x, scale.y);				 			  
-		  c.rect(0, 0, w, h);
+		  c.rect(0, 0, dimensions.w, dimensions.h);
 		  c.fill();
 		  if(lineWidth > 0) {
 			c.stroke(); 
@@ -233,7 +245,7 @@ Difractal.Entity = function(x, y, w, h) {
 					c.font = font;
 					c.fillStyle = textcolor;
 					c.textAlign = "center";
-					c.fillText(explode[x],w/2,h/2 + lineheight);
+					c.fillText(explode[x],dimensions.w/2,dimensions.h/2 + lineheight);
 					lineheight+=25;
 				}
 			 } else {
@@ -246,8 +258,8 @@ Difractal.Entity = function(x, y, w, h) {
 		  c.restore();
 	   },
 	   Contains: function (x_click, y_click) {
-		  if(x_click >= translation.x && x_click <= scale.x * w + translation.x) {
-			 if(y_click >= translation.y && y_click <= scale.y * h + translation.y) {
+		  if(x_click >= translation.x && x_click <= scale.x * dimensions.w + translation.x) {
+			 if(y_click >= translation.y && y_click <= scale.y * dimensions.h + translation.y) {
 				return true;
 			 }
 		  }
