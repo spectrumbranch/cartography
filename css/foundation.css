@@ -3927,7 +3927,7 @@ form.custom .custom.disabled {
 }
 /* line 104, ../scss/foundation/components/_top-bar.scss */
 .top-bar .button {
-  padding-top: .5em;
+  padding-top: .3em;
   padding-bottom: .5em;
   margin-bottom: 0;
 }
