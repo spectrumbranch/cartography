@@ -157,6 +157,7 @@ Difractal.Entity = function(x, y, w, h) {
 		  "w" : a ,
 		  "h" : b
 		  };
+		  console.log(dimensions);
 	   },
 	   SetFillStyle: function (n) {
 		  fillStyle = n;

@@ -36,7 +36,7 @@ $(document).ready(function () {
 	   if(!Cartography.TiledMap.SelectionRegion.Started && e.which == 16) {
 	     var tr = CursorSprite.GetTranslation();
 		 var d = CursorSprite.GetDimensions();
-		 if(CursorSprite.Active && Cartography.MapBounds.Contains(tr.x,tr.y)) {	
+		 if(CursorSprite.Active && Cartography.MapBounds.Contains(tr.x,tr.y)	) {	
               Cartography.TiledMap.SelectionRegion.Started = true;  
 		      Cartography.TiledMap.SelectionRegion.StartCorner = {x : tr.x , y : tr.y};
               Cartography.TiledMap.SelectionRegion.PreviewBox.DrawEnabled = true;
@@ -147,7 +147,6 @@ $(document).ready(function () {
     SelectorSprite.SetLineWidth(0);
 	SelectorSprite.SetZIndex(10);
 	
-
 	/*SelectorSprite.TileSnapSprite = new Difractal.Entity(-9999,-9999,tileSelectorWidth,tileSelectorHeight);
     SelectorSprite.TileSnapSprite.SetFillStyle("rgba(125, 125, 255, 0.5)");
     SelectorSprite.TileSnapSprite.SetLineWidth(0);
@@ -160,7 +159,7 @@ $(document).ready(function () {
 	CursorSprite.SetZIndex(4);
    CursorSprite.MouseMove = function(e) {
 	   
-	   if(CursorSprite.Active && Cartography.MapBounds.Contains(e.offsetX,e.offsetY) && e.srcElement == Difractal.Canvases["#canvas"].c[0]) {
+	   if(CursorSprite.Active && Cartography.MapBounds.Contains(e.offsetX,e.offsetY)) {
 		  CursorSprite.DrawEnabled = true;
 		  var dim = CursorSprite.GetDimensions();
 		  CursorSprite.SetTranslation( Math.floor(e.offsetX / dim.w) * dim.w , Math.floor(e.offsetY / dim.h) * dim.h );
@@ -183,6 +182,7 @@ $(document).ready(function () {
 				 Cartography.TiledMap.SelectionRegion.PreviewBox.SetDimensions(width,height);
 			  }
 		}
+		  
 		  
 	   } else {
 		  CursorSprite.DrawEnabled = false;
