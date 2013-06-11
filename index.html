@@ -56,6 +56,23 @@
 		-->
 					<li class="divider hide-for-small"></li>
 					<li>
+						<div class="row">
+							<div id="register-dropdown" class="f-dropdown small" data-dropdown-content>
+								<div style="width:200px">
+									<p>All fields are required.</p>
+									<input type="text" placeholder="userid" name="userid" />
+									<input type="password" placeholder="password" name="passwrd" />
+									<input type="password" placeholder="confirm password" name="passwrd0" />
+									<input type="text" placeholder="email" name="email" />
+									<input type="submit" class="button prefix" value="Submit" />
+								</div>
+							</div>
+							<div class="row collapse">
+								<input type="button" data-dropdown="register-dropdown" href="#" class="button prefix" value="Register" style="max-width:100px; margin-left:5px;" />
+							</div>
+						</div>
+					</li>
+					<li>
 						<form 	id="login_form" 
 								action="#" 
 								method="post" 
@@ -65,10 +82,10 @@
 								<div class="large-12 columns">
 									<div class="row collapse">
 										<div class="small-5 columns">
-										  <input type="text" placeholder="username" name="user" />
+										  <input type="text" placeholder="username" name="luser" />
 										</div>
 										<div class="small-5 columns">
-										  <input type="password" placeholder="password" name="passwrd" />
+										  <input type="password" placeholder="password" name="lpasswrd" />
 										</div>
 										<div class="small-2 columns">
 										  <input type="submit" href="#" class="button prefix" value="Login" />
@@ -77,15 +94,6 @@
 								</div>
 							</div>
 						</form>
-					</li>
-					<li>
-						<div class="row">
-						<div class="large-12 columns">
-							<div class="row collapse">
-								<input type="submit" href="#" class="button prefix" value="Register" style="max-width:100px" />
-							</div>
-						</div>
-						</div>
 					</li>
 			</ul>
 		</section>
@@ -120,6 +128,8 @@
 <script src="js/foundation/foundation.js"></script>
 <script src="js/foundation/foundation.topbar.js"></script>
 <script src="js/foundation/foundation.forms.js"></script>
+<script src="js/foundation/foundation.joyride.js"></script>
+<script src="js/foundation/foundation.dropdown.js"></script>
 <script>
   $(function(){
     $(document).foundation();    
