@@ -1,0 +1,29 @@
+{
+  "name": "cartography",
+  "version": "0.0.0",
+  "description": "A 2D tile based map editor.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/spectrumbranch/cartography.git"
+  },
+  "keywords": [
+    "map",
+    "editor",
+    "tile",
+    "2D"
+  ],
+  "author": "Christopher Bebry",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "e4f82839106932442bfdfb17303e760d77d284a7",
+  "dependencies": {
+    "hapi": "~1.7.3"
+  }
+}
