@@ -3,8 +3,10 @@ var Hapi = require('hapi'),
 var serverConfig = require('./config/config').config,
     server = new Hapi.Server(serverConfig.hostname, serverConfig.port, options);
 
+var util = require('./lib').Util;
 server.route([
-  { method: '*', path: '/{path*}', handler: { directory: { path: './www/', listing: false, redirectToSlash: true } } }
+  { method: 'GET', path: '/version', handler: function() { this.reply(util.version); } },
+  { method: '*', path: '/{path*}', handler: { directory: { path: './static/', listing: false, redirectToSlash: true } } }
 ]);
 
 server.start();
