@@ -24,6 +24,9 @@
   "readmeFilename": "README.md",
   "gitHead": "e4f82839106932442bfdfb17303e760d77d284a7",
   "dependencies": {
-    "hapi": "git://github.com/spumko/hapi.git"
+    "hapi": "git://github.com/spumko/hapi.git",
+    "scurvy": "0.0.1",
+    "sequelize": "~2.0.0-alpha2",
+    "mysql": "~2.0.0-alpha8"
   }
 }
