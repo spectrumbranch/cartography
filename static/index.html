@@ -41,56 +41,47 @@
 			</ul>
 			
 			<ul class="right">
-		<!--
-				  <li class="divider hide-for-small"></li>
-				  <li class="has-dropdown"><a href="#">UserName</a>
-					<ul class="dropdown"><li class="title back js-generated"><h5><a href="#">« Back</a></h5></li>
-						<li><a href="#">Profile</a></li>
-						<li><a href="#">Logout</a></li>
-					</ul>
-				  </li>
-		-->
-					<li class="divider hide-for-small"></li>
-					<li class="has-form">
-						<div class="row">
-							<div id="register-dropdown" class="f-dropdown small" data-dropdown-content>
-								<div style="width:200px">
-									<p>All fields are required.</p>
-									<input type="text" placeholder="userid" name="userid" />
-									<input type="password" placeholder="password" name="passwrd" />
-									<input type="password" placeholder="confirm password" name="passwrd0" />
-									<input type="text" placeholder="email" name="email" />
-									<input type="submit" class="button prefix" value="Submit" />
-								</div>
-							</div>
-							<div class="row collapse">
-								<input type="button" data-dropdown="register-dropdown" href="#" class="button prefix" value="Register"/>
+				<li class="divider hide-for-small"></li>
+				<li class="has-form">
+					<div class="row">
+						<div id="register-dropdown" class="f-dropdown register" data-dropdown-content>
+							<div style="width:200px">
+								<input type="text" placeholder="userid" name="userid" />
+								<input type="password" placeholder="password" name="passwrd" />
+								<input type="password" placeholder="confirm password" name="passwrd0" />
+								<input type="text" placeholder="email" name="email" />
+								<input type="submit" class="button prefix" value="Submit" />
+								<p><em>All fields are required.</em></p>
 							</div>
 						</div>
-					</li>
-					<li class="has-form">
-						<form 	id="login_form" 
-								action="#" 
-								method="post" 
-								accept-charset="utf-8" 
-							>
-							<div class="row">
-								<div class="large-12 columns">
-									<div class="row collapse">
-										<div class="small-5 columns">
-										  <input type="text" placeholder="username" name="luser" />
-										</div>
-										<div class="small-5 columns">
-										  <input type="password" placeholder="password" name="lpasswrd" />
-										</div>
-										<div class="small-2 columns">
-										  <input type="submit" href="#" class="button prefix" value="Login" />
-										</div>
+						<div class="row collapse">
+							<input type="button" data-dropdown="register-dropdown" href="#" class="button prefix" value="Register"/>
+						</div>
+					</div>
+				</li>
+				<li class="has-form">
+					<form 	id="login_form" 
+							action="#" 
+							method="post" 
+							accept-charset="utf-8" 
+						>
+						<div class="row">
+							<div class="large-12 columns">
+								<div class="row collapse">
+									<div class="small-5 columns">
+									  <input type="text" placeholder="username" name="luser" />
+									</div>
+									<div class="small-5 columns">
+									  <input type="password" placeholder="password" name="lpasswrd" />
+									</div>
+									<div class="small-2 columns">
+									  <input type="submit" href="#" class="button prefix" value="Login" />
 									</div>
 								</div>
 							</div>
-						</form>
-					</li>
+						</div>
+					</form>
+				</li>
 			</ul>
 		</section>
 	</nav>
