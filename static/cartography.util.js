@@ -13,3 +13,9 @@ Cartography.createArray = function(length) {
 
     return arr;
 }
+
+Cartography.getVersion = function() {
+	$.get('/version', function(data) {
+		$('#version').html("v"+data);
+	});
+}
