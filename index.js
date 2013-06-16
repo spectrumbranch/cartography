@@ -1,13 +1,14 @@
 var Hapi = require('hapi'),
     options = { };
 var masterConfig = require('./config/config');
+
 var serverConfig = masterConfig.config,
+	mailConfig = masterConfig.mailconfig,
     server = new Hapi.Server(serverConfig.hostname, serverConfig.port, options);
 
 var util = require('./lib').Util;
 var auth = require('./lib').Auth;
 var mailer = require('./lib').Mailer;
-var mailConfig = masterConfig.mailconfig;
 mailer.init(mailConfig);
 
 server.auth('session', {
@@ -22,12 +23,13 @@ server.auth('session', {
 
 
 server.route([
-  { method: 'GET', path: '/version', handler: function() { this.reply(util.version); } },
-  
-  { method: 'GET', path: '/confirm/{hashkey*2}', config: { handler: auth.confirm, auth: false  } },
+  //Cartography Routes
+  { method: 'GET', 	path: '/version', handler: function() { this.reply(util.version); } },
+  //Scurvy Routes
+  { method: 'GET', 	path: '/confirm/{hashkey*2}', config: { handler: auth.confirm, auth: false  } },
   { method: 'POST', path: '/register', config: { handler: auth.register, validate: { payload: auth.register_validate(Hapi) }, auth: false  } },
-  
-  { method: '*', path: '/{path*}', handler: { directory: { path: './static/', listing: false, redirectToSlash: true } } }
+  //All static content
+  { method: '*', 	path: '/{path*}', handler: { directory: { path: './static/', listing: false, redirectToSlash: true } } }
 ]);
 
 
