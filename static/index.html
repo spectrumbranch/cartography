@@ -46,16 +46,18 @@
 					<div class="row">
 						<div id="register-dropdown" class="f-dropdown register" data-dropdown-content>
 							<div style="width:200px">
-								<input type="text" placeholder="userid" name="userid" />
-								<input type="password" placeholder="password" name="passwrd" />
-								<input type="password" placeholder="confirm password" name="passwrd0" />
-								<input type="text" placeholder="email" name="email" />
-								<input type="submit" id="register-btn" class="button prefix" value="Submit" />
+								<form id="register-form">
+									<input type="text" placeholder="userid" name="userid" id="userid" />
+									<input type="password" placeholder="password" name="passwrd" id="passwrd" />
+									<input type="password" placeholder="confirm password" name="passwrd0" id="passwrd0" />
+									<input type="text" placeholder="email" name="email" id="email" />
+									<input type="button" id="register-btn" class="button prefix" value="Submit" />
+								</form>
 								<p><em>All fields are required.</em></p>
 							</div>
 						</div>
 						<div class="row collapse">
-							<input type="button" data-dropdown="register-dropdown" href="#" class="button prefix" value="Register"/>
+							<input id="register-dropdown-trigger" type="button" data-dropdown="register-dropdown" href="#" class="button prefix" value="Register"/>
 						</div>
 					</div>
 				</li>

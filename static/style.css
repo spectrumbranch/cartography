@@ -12,6 +12,10 @@
 #register-dropdown .button {
 	margin-top: 7px;
 }
+#register-dropdown small.error {
+	margin-top: 8px;
+	margin-bottom: 0px;
+}
 
 .f-dropdown.register {
 	max-width: 222px;
