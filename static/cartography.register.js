@@ -66,7 +66,7 @@ $(document).ready(function () {
 		} else {
 			//No errors!
 			//Step 2: Submit form via ajax POST. 
-			$.post('/TODO/register', $('#register-form').serialize(), function(data) {
+			$.post('/register', $('#register-form').serialize(), function(data) {
 				//Step 3: Get response and display a message accordingly.
 				//		If OK, disable register so user doesn't register twice.
 				//				Inform user that the confirmation email has been sent.
@@ -76,15 +76,15 @@ $(document).ready(function () {
 					$('#register-dropdown-trigger').click();
 					$('#register-dropdown-trigger').removeAttr('data-dropdown');
 					$('#register-dropdown-trigger').addClass('disabled');
-					//TODO: give user a message saying confirmation email has been sent!
+					//Give user a message saying confirmation email has been sent!
+					$('#register-modal').html('<h2>Awesome!</h2><p>Registration was successful! A confirmation email has been sent out to ' + email + '. Please visit the confirmation URL that is found in the email in order to activate your account.</p><a class="close-reveal-modal">&#215;</a>');
+					$('#register-modal').foundation('reveal', 'open');
 				} else {
 					//Error during registration process.
-					//TODO: make this a modal instead of an alert.
-					alert('Something went wrong when trying to register you as a new user.');
+					$('#register-modal').html('<h2>Uh oh!</h2><p>Something went wrong when trying to register you as a new user. Please try again soon.</p><a class="close-reveal-modal">&#215;</a>');
+					$('#register-modal').foundation('reveal', 'open');
 				}
 			}, 'json');
 		}
-		
-
 	});
 });
