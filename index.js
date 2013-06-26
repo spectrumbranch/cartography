@@ -26,7 +26,7 @@ server.route([
   //Cartography Routes
   { method: '*', 	path: '/version', handler: function() { this.reply(util.version); } },
   //Scurvy Routes
-  { method: '*', 	path: '/confirm/{hashkey*2}', config: { handler: auth.confirm, auth: false  } },
+  { method: '*', 	path: '/confirm/{hashkey*}', config: { handler: auth.confirm, auth: false  } },
   { method: 'POST', path: '/register', config: { handler: auth.register, validate: { payload: auth.register_validate(Hapi) }, auth: false  } },
   //{ method: 'POST', path: '/login', config: { handler: auth.login, validate: { payload: auth.login_validate(Hapi) }, auth: false  } },
   //{ method: 'POST', path: '/logout', config: { handler: auth.logout, auth: false  } },
