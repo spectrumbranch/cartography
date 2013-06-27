@@ -28,6 +28,7 @@
     "scurvy": "0.0.2",
     "sequelize": "~2.0.0-alpha2",
     "mysql": "~2.0.0-alpha8",
-    "nodemailer": "~0.4.4"
+    "nodemailer": "~0.4.4",
+    "handlebars": "~1.0.12"
   }
 }

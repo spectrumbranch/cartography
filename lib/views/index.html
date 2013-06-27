@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Cartography</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/foundation.css">
+	<link href='style.css' rel='stylesheet' type='text/css' media='all' />
+	
+	<script src="js/vendor/custom.modernizr.js"></script>
+</head>
+<body>
+	{{> menu}}
+
+
+
+
+<div class="row" style="min-height:800px;">
+	<canvas id="canvas"></canvas>
+</div>
+
+<script src="jquery-1.7.1.js"></script>
+
+<script type="text/javascript" src="difractal-core.js"></script>
+<script type="text/javascript" src="difractal-util.js"></script>
+<script type="text/javascript" src="difractal-entity.js"></script>
+<script type="text/javascript" src="difractal-gamestate.js"></script>
+<script type="text/javascript" src="difractal-texture2d.js"></script>
+<script type="text/javascript" src="difractal-collision.js"></script>
+<script type="text/javascript" src="draw.js"></script>
+
+<script type="text/javascript" src="cartography.core.js"></script>
+<script type="text/javascript" src="cartography.util.js"></script>
+<script type="text/javascript" src="cartography.bootstrap.js"></script>
+<!-- TODO: only show register if not logged in -->
+<script type="text/javascript" src="cartography.register.js"></script>
+
+<script>
+  document.write('<script src=js/vendor/'
+	+ ('__proto__' in {} ? 'zepto' : 'jquery')
+	+ '.js><\/script>');
+</script>
+<script src="js/foundation/foundation.js"></script>
+<script src="js/foundation/foundation.topbar.js"></script>
+<script src="js/foundation/foundation.forms.js"></script>
+<script src="js/foundation/foundation.joyride.js"></script>
+<script src="js/foundation/foundation.dropdown.js"></script>
+<script src="js/foundation/foundation.reveal.js"></script>
+<script>
+  $(function(){
+    $(document).foundation();    
+  })
+</script>
+
+</body>
+</html>
