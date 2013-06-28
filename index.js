@@ -32,7 +32,7 @@ server.views({
 
 server.route([
   //Cartography Routes
-  { method: 'GET', 	path: '/', handler: function() { this.reply.view('index', {anonymous: true}); } },
+  { method: 'GET', 	path: '/', handler: function() { this.reply.view('index', {anonymous: true, userid: 'Chris' }); } },
   { method: '*', 	path: '/version', handler: function() { this.reply(util.version); } },
   //Scurvy Routes
   { method: '*', 	path: '/confirm/{hashkey*}', config: { handler: auth.confirm, auth: false  } },
