@@ -32,13 +32,14 @@ server.views({
 
 server.route([
   //Cartography Routes
-  { method: 'GET', 	path: '/', handler: function() { this.reply.view('index', {anonymous: true, userid: 'Chris' }); } },
+  { method: 'GET', 	path: '/', handler: function() { this.reply.view('index', {anonymous: true, userid: 'Chris' }); } }, //these values are for testing
   { method: '*', 	path: '/version', handler: function() { this.reply(util.version); } },
   //Scurvy Routes
   { method: '*', 	path: '/confirm/{hashkey*}', config: { handler: auth.confirm, auth: false  } },
   { method: 'POST', path: '/register', config: { handler: auth.register, validate: { payload: auth.register_validate(Hapi) }, auth: false  } },
-  //{ method: 'POST', path: '/login', config: { handler: auth.login, validate: { payload: auth.login_validate(Hapi) }, auth: false  } },
-  //{ method: 'POST', path: '/logout', config: { handler: auth.logout, auth: false  } },
+  { method: 'POST', path: '/login', config: { handler: auth.login, validate: { payload: auth.login_validate(Hapi) }, auth: { mode: 'try' }  } },
+  { method: 'GET', path: '/login', config: { handler: auth.login_view, auth: { mode: 'try' }  } },
+  { method: '*', path: '/logout', config: { handler: auth.logout, auth: true  } },
   
   //All static content
   { method: '*', 	path: '/{path*}', handler: { directory: { path: './static/', listing: false, redirectToSlash: true } } }
