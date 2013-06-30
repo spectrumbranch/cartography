@@ -60,6 +60,7 @@ var db = require('./lib/models');
 db.init(function() {
 	console.log('database setup complete');
 	server.start();
+	auth.setURI(server.info.uri);
 	console.log('Server up at ' + server.info.uri + ' !');
 });
 

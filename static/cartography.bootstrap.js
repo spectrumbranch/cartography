@@ -122,7 +122,7 @@ $(document).ready(function () {
 		     var pt = corners[index];
 		      if(Cartography.MapBounds.Contains(pt.x,pt.y)) {
                   onmap = true;
-                  break;				  
+                  break;
 			  }
 		   }
 		   if(!onmap) {
@@ -169,10 +169,10 @@ $(document).ready(function () {
 			}
 			if(fulfill) {
 				var tr = SelectorSprite.TileSnapSprite.GetTranslation();
-				SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)		
+				SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999);
 				SelectorSprite.SetTranslation(tr.x,tr.y);
 			} else {
-				SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999)		
+				SelectorSprite.TileSnapSprite.SetTranslation(-9999,-9999);
 				SelectorSprite.SetTranslation(palette_origin.x,palette_origin.y);				
 			}
 		}
