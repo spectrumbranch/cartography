@@ -3,20 +3,30 @@ var Hapi = require('hapi'),
 var masterConfig = require('./config/config');
 
 var serverConfig = masterConfig.config,
-	mailConfig = masterConfig.mailconfig,
-    server = new Hapi.Server(serverConfig.hostname, serverConfig.port, options);
+	tlsConfig = masterConfig.tlsconfig,
+	mailConfig = masterConfig.mailconfig;
+	
+if (serverConfig.tls) {
+	console.log('Loading tls');
+	options.tls = tlsConfig;
+}
+
+var server = new Hapi.Server(serverConfig.hostname, serverConfig.port, options);
 
 var util = require('./lib').Util;
 var auth = require('./lib').Auth;
 var mailer = require('./lib').Mailer;
+var home = require('./lib').Home;
 mailer.init(mailConfig);
+
+
 
 server.auth('session', {
     scheme: 'cookie',
     password: 'sdoi239fsER0a1', //TODO: refactor this out to gitignored auth config file
     cookie: 'cartography-cookie',  //?TODO: refactor this out to gitignored auth config file
     redirectTo: '/',
-	isSecure: false, //TODO: generate SSL cert, put together config for this
+	isSecure: serverConfig.tls,
 	ttl: 1800000,
 	clearInvalid: true
 });
@@ -32,7 +42,7 @@ server.views({
 
 server.route([
   //Cartography Routes
-  { method: 'GET', 	path: '/', handler: function() { this.reply.view('index', {anonymous: true, userid: 'Chris' }); } }, //these values are for testing
+  { method: 'GET', 	path: '/', config: { handler: home.handler, auth: { mode: 'try' } } },
   { method: '*', 	path: '/version', handler: function() { this.reply(util.version); } },
   //Scurvy Routes
   { method: '*', 	path: '/confirm/{hashkey*}', config: { handler: auth.confirm, auth: false  } },

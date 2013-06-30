@@ -8,7 +8,8 @@
 
 exports.config = {
   hostname: '0.0.0.0',
-  port: 8000
+  port: 8000,
+  tls: false
 };
 
 exports.mailconfig = {
@@ -18,3 +19,10 @@ exports.mailconfig = {
 	from: '"Cartography Server" <no-reply@something.com>'
   }
 };
+
+//If exports.config.tls == true, then the following tlsconfig is required to be filled out properly.
+var fs = require('fs');
+exports.tlsconfig = {
+  key: fs.readFileSync('/somewhere/fixtures/keys/cartography-key.pem'),
+  cert: fs.readFileSync('/somewhere/fixtures/keys/cartography-cert.pem')
+}
