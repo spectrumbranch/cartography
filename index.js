@@ -20,8 +20,6 @@ var home = require('./lib').Home;
 var scurvy = require('scurvy');
 mailer.init(mailConfig);
 
-
-
 server.auth('session', {
     scheme: 'cookie',
     password: 'sdoi239fsER0a1', //TODO: refactor this out to gitignored auth config file
@@ -46,18 +44,21 @@ server.route([
   { method: 'GET', 	path: '/', config: { handler: home.handler, auth: { mode: 'try' } } },
   { method: '*', 	path: '/version', handler: function() { this.reply(util.version); } },
   //Scurvy Routes
-  { method: '*', 	path: '/confirm/{hashkey*}', config: { handler: scurvy.confirm, auth: false  } },
-  { method: 'POST', path: '/register', config: { handler: scurvy.register, validate: { payload: scurvy.register_validate(Hapi) }, auth: false  } },
-  { method: 'POST', path: '/login', config: { handler: scurvy.login, validate: { payload: scurvy.login_validate(Hapi) }, auth: { mode: 'try' }  } },
-  { method: 'GET', path: '/login', config: { handler: scurvy.login_view, auth: { mode: 'try' }  } },
-  { method: '*', path: '/logout', config: { handler: scurvy.logout, auth: true  } },
+  { method: '*', 	path: '/confirm/{hashkey*}', config: { handler: auth.confirm, auth: false  } },
+  { method: 'POST', path: '/register', config: { handler: auth.register, validate: { payload: scurvy.register_validate(Hapi) }, auth: false  } },
+  { method: 'POST', path: '/login', config: { handler: auth.login, validate: { payload: scurvy.login_validate(Hapi) }, auth: { mode: 'try' }  } },
+  { method: 'GET', path: '/login', config: { handler: auth.login_view, auth: { mode: 'try' }  } },
+  { method: '*', path: '/logout', config: { handler: auth.logout, auth: true  } },
   
   //All static content
   { method: '*', 	path: '/{path*}', handler: { directory: { path: './static/', listing: false, redirectToSlash: true } } }
 ]);
 
 //setup/load modules/plugins here
-var virt_modules = [scurvy];
+var virt_modules = [];
+virt_modules.push(scurvy);
+
+
 var db = require('./lib/models');
 db.init(virt_modules, function() {
 	console.log('database setup complete');
