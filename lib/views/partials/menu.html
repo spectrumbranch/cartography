@@ -13,13 +13,19 @@
 	<section class="top-bar-section">
 		<ul class="left">
 			<li class="divider"></li>
-			<li class="has-dropdown"><a href="#">Tileset</a>
-				<ul class="dropdown"><li class="title back js-generated"><h5><a href="#">« Back</a></h5></li>
-					<li><label>Tileset</label></li>
-					<li><a href="#">Load Tileset</a></li>
-				</ul>
-			</li>
-			<li class="divider"></li>
+			{{#if anonymous}}
+				
+			{{else}}
+				<li class="has-dropdown"><a href="#">Tileset</a>
+					<ul class="dropdown"><li class="title back js-generated"><h5><a href="#">« Back</a></h5></li>
+						<li><label>Tileset</label></li>
+						<li><a href="#">Load Tileset</a></li>
+					</ul>
+				</li>
+				<li class="divider"></li>
+			{{/if}}
+			
+			
 			<li><a href="https://github.com/spectrumbranch/cartography">Github</a></li>
 			<li class="divider"></li>
 			<li><a id="version"></a></li>

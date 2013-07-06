@@ -34,8 +34,13 @@
 <script type="text/javascript" src="cartography.core.js"></script>
 <script type="text/javascript" src="cartography.util.js"></script>
 <script type="text/javascript" src="cartography.bootstrap.js"></script>
-<!-- TODO: only show register if not logged in -->
-<script type="text/javascript" src="cartography.register.js"></script>
+{{#if anonymous}}
+	<script type="text/javascript" src="cartography.register.js"></script>
+	<script type="text/javascript" src="cartography.login.js"></script>
+{{else}}
+	
+{{/if}}
+
 
 <script>
   document.write('<script src=js/vendor/'
