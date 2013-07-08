@@ -58,7 +58,6 @@ server.route([
 var virt_modules = [];
 virt_modules.push(scurvy);
 
-
 var db = require('./lib/models');
 db.init(virt_modules, function() {
 	console.log('database setup complete');
