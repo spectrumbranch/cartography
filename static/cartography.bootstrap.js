@@ -3,8 +3,6 @@ if (typeof (Cartography) === "undefined") {
 }
 
 $(document).ready(function () {
-	Cartography.getVersion();
-
 	var cnv = Cartography.Config.canvas;
 	Difractal.AddCanvas(cnv);
 	
