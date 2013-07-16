@@ -20,9 +20,10 @@ exports.mailconfig = {
   }
 };
 
-//If exports.config.tls == true, then the following tlsconfig is required to be filled out properly.
-var fs = require('fs');
-exports.tlsconfig = {
-  key: fs.readFileSync('/somewhere/fixtures/keys/cartography-key.pem'),
-  cert: fs.readFileSync('/somewhere/fixtures/keys/cartography-cert.pem')
-}
+//If exports.config.tls == true, then the following tlsconfig is required to be uncommneted and filled out properly.
+//Keep this commented out if exports.config.tls == false
+//var fs = require('fs');
+//exports.tlsconfig = {
+//  key: fs.readFileSync('/somewhere/fixtures/keys/cartography-key.pem'),
+//  cert: fs.readFileSync('/somewhere/fixtures/keys/cartography-cert.pem')
+//}
