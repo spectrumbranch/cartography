@@ -24,7 +24,7 @@
   "readmeFilename": "README.md",
   "gitHead": "e4f82839106932442bfdfb17303e760d77d284a7",
   "dependencies": {
-    "hapi": "~1.8.0",
+    "hapi": "~1.8.3",
     "scurvy": "0.1.2",
     "sequelize": "~2.0.0-alpha2",
     "mysql": "~2.0.0-alpha8",
