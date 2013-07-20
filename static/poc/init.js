@@ -2,7 +2,7 @@
 //var angularSpeed = 0.2; 
 //var lastTime = 0;
 
-var VIEW_ANGLE = 45;
+var VIEW_ANGLE = 170;
 var ASPECT = window.innerWidth / window.innerHeight;
 var NEAR = 1;
 var FAR = 1000;
@@ -32,18 +32,37 @@ document.body.appendChild(renderer.domElement);
 
 // camera
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-camera.position.y = -450;
-camera.position.z = 400;
-camera.rotation.x = 45 * (Math.PI / 180);
+camera.position.x = 200;
+camera.position.y = 200;
+camera.position.z = 25;
+//camera.rotation.x = 0;// * (Math.PI / 180);
 
 // scene
 var scene = new THREE.Scene();
 
-// plane
-var plane = new THREE.PlaneGeometry(300, 300);
-var planemesh = new THREE.Mesh(plane, new THREE.MeshNormalMaterial());
-planemesh.overdraw = true;
-scene.add(planemesh);
+//texture 
+var texture = new THREE.ImageUtils.loadTexture( "../tilesets/robots/floor.png" );
+texture.wrapS = THREE.RepeatWrapping; 
+texture.wrapT = THREE.RepeatWrapping;
+var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide });
+
+var sidelength = 48;
+var sides_x = 16;
+var sides_y = 16;
+
+//planes
+for (var i = 0; i < sides_x; i++) {
+	for (var j = 0; j < sides_y; j++) {
+		// plane
+		var plane = new THREE.PlaneGeometry(sidelength, sidelength);
+		var planemesh = new THREE.Mesh(plane, material);
+		planemesh.position.x = i*sidelength;
+		planemesh.position.y = j*sidelength;
+		planemesh.overdraw = true;
+		scene.add(planemesh);
+	}
+}
+
 
 // start animation
 animate();
