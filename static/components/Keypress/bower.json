@@ -1,0 +1,15 @@
+{
+  "name": "Keypress",
+  "version": "0.0.0",
+  "main": "keypress.js",
+  "description": "a robust keyboard input capturing Javascript utility focused on input for games. For details and documentation, please visit http://dmauro.github.io/Keypress/",
+  "gitHead": "17bb9e45cef0d2463b6ba490f0b2aa3109394439",
+  "readme": "Keypress\n========\nVersion 1.0.8\n\nKeypress is a robust keyboard input capturing Javascript utility\nfocused on input for games. For details and documentation, please\nvisit [http://dmauro.github.io/Keypress/](http://dmauro.github.io/Keypress/)\n\nCopyright 2012 David Mauro\nreleased under the Apache License, version 2.0\n\n\n**What's new**\n---------------\n\n1.0.8\n\n* Ensure that on_release is called for all combos, not just counting combos.\n* Fix bug that was causing is_ordered to be ignored.\n* Fixed an edge case for a counting combo's count not being reset.\n* Improve how key events are bound\n\n1.0.7\n\n* Fixed combo matching to prevent performance issues as more keys are pressed.\n\n1.0.6\n\n* Fixed a bug with exclusive combos not properly excluding each other in some cases.\n* Feature added to allow for combos that do not fire if unrelated keys are also pressed (\"is_solitary\" boolean).\n\n\n\nTODO\n----\n\n* Put negative edge in sequences.\n* See if we can do away with keyup_fired and count properties.\n",
+  "readmeFilename": "README.md",
+  "_id": "Keypress@1.0.8",
+  "commit": "17bb9e45cef0d2463b6ba490f0b2aa3109394439",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dmauro/Keypress.git"
+  }
+}

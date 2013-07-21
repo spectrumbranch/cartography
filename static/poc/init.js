@@ -25,6 +25,38 @@ function animate(){
 	});
 }
 
+keypress.combo("s", function() {
+    camera.position.y--;
+});
+
+keypress.combo("shift s", function() {
+    camera.position.y -= 10;
+});
+
+keypress.combo("w", function() {
+    camera.position.y++;
+});
+
+keypress.combo("shift w", function() {
+    camera.position.y += 10;
+});
+
+keypress.combo("d", function() {
+    camera.position.x++;
+});
+
+keypress.combo("shift d", function() {
+    camera.position.x += 10;
+});
+
+keypress.combo("a", function() {
+    camera.position.x--;
+});
+
+keypress.combo("shift a", function() {
+    camera.position.x -= 10;
+});
+
 // renderer
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
