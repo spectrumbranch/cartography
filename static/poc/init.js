@@ -82,12 +82,16 @@ var sidelength = 48;
 var sides_x = 16;
 var sides_y = 16;
 
+//Create tile editor palette potion
+var paletteTiles = Cartography.createArray(sides_x, sides_y);
+
 //planes
 for (var i = 0; i < sides_x; i++) {
 	for (var j = 0; j < sides_y; j++) {
 		// plane
 		var plane = new THREE.PlaneGeometry(sidelength, sidelength);
 		var planemesh = new THREE.Mesh(plane, material);
+		paletteTiles[i,j] = { plane: plane, mesh: planemesh };
 		planemesh.position.x = i*sidelength;
 		planemesh.position.y = j*sidelength;
 		planemesh.overdraw = true;
