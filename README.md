@@ -5,6 +5,11 @@ cartography
 
 A 2D tile based map editor.
 
+What is a Map?
+--------------
+
+A ```Map``` is a 2D grid representation of a landscape. You may texture each section of the grid with ```Tile2Ds```.
+
 Installation
 ============
 Clone the latest:
