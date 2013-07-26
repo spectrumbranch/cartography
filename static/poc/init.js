@@ -63,9 +63,16 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // camera
-var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-camera.position.x = 200;
-camera.position.y = 200;
+var CAMERA_LEFT = window.innerWidth / -2;
+var CAMERA_RIGHT = window.innerWidth / 2;
+var CAMERA_TOP = window.innerHeight / 2;
+var CAMERA_BOTTOM = window.innerHeight / -2;
+
+
+var camera = new THREE.OrthographicCamera(CAMERA_LEFT, CAMERA_RIGHT, CAMERA_TOP, CAMERA_BOTTOM, -NEAR, FAR);
+//var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+camera.position.x = 300;
+camera.position.y = 350;
 camera.position.z = 25;
 //camera.rotation.x = 0;// * (Math.PI / 180);
 
