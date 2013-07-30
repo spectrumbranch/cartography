@@ -72,7 +72,7 @@ var CAMERA_BOTTOM = window.innerHeight / -2;
 var camera = new THREE.OrthographicCamera(CAMERA_LEFT, CAMERA_RIGHT, CAMERA_TOP, CAMERA_BOTTOM, -NEAR, FAR);
 //var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 camera.position.x = 300;
-camera.position.y = 350;
+camera.position.y = 300;//350;
 camera.position.z = 25;
 //camera.rotation.x = 0;// * (Math.PI / 180);
 

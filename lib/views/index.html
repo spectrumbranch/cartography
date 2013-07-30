@@ -15,31 +15,24 @@
 	{{> menu}}
 
 
-
-
-<div class="row" style="min-height:800px;">
-	<canvas id="canvas"></canvas>
-</div>
-
+<div id="container"></div>
 <script src="jquery-1.7.1.js"></script>
-
-<script type="text/javascript" src="js/difractal/difractal-core.js"></script>
-<script type="text/javascript" src="js/difractal/difractal-util.js"></script>
-<script type="text/javascript" src="js/difractal/difractal-entity.js"></script>
-<script type="text/javascript" src="js/difractal/difractal-gamestate.js"></script>
-<script type="text/javascript" src="js/difractal/difractal-texture2d.js"></script>
-<script type="text/javascript" src="js/difractal/difractal-collision.js"></script>
-<script type="text/javascript" src="js/draw.js"></script>
+<script src="/components/Keypress/keypress.js"></script>
+<script src="/js/three.min.js"></script>
 
 <script type="text/javascript" src="cartography.core.js"></script>
 <script type="text/javascript" src="cartography.util.js"></script>
+<!--
 <script type="text/javascript" src="cartography.bootstrap.js"></script>
+-->
 {{#if anonymous}}
 	<script type="text/javascript" src="cartography.register.js"></script>
 	<script type="text/javascript" src="cartography.login.js"></script>
 {{else}}
 	
 {{/if}}
+
+<script src="/poc/init.js" defer="defer"></script>
 
 
 <script>
