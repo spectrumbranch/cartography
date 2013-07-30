@@ -17,6 +17,9 @@ Clone the latest:
 ```cd cartography```
 Install the application's dependencies:
 ```npm install .```
+
+Note: If you are a Windows user, you need to ensure that you have the dependencies for ```bcrypt``` (because cartography uses it in the authentication module ```scurvy```) found here: https://github.com/ncb000gt/node.bcrypt.js/#dependencies
+
 Setup configuration files:
 ```cp ./config/database.example.js ./config/database.js```
 ```cp ./config/config.example.js ./config/config.js```
