@@ -2,8 +2,8 @@
 //var angularSpeed = 0.2; 
 //var lastTime = 0;
 
-var VIEW_ANGLE = 170;
-var ASPECT = window.innerWidth / window.innerHeight;
+//var VIEW_ANGLE = 170;
+//var ASPECT = window.innerWidth / window.innerHeight;
 var NEAR = 1;
 var FAR = 1000;
 
@@ -63,17 +63,18 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // camera
-var CAMERA_LEFT = window.innerWidth / -2;
-var CAMERA_RIGHT = window.innerWidth / 2;
-var CAMERA_TOP = window.innerHeight / 2;
-var CAMERA_BOTTOM = window.innerHeight / -2;
+const CAMERA_LEFT_PADDING = 50;
+const CAMERA_TOP_PADDING = 25
+
+var CAMERA_LEFT = 0-CAMERA_LEFT_PADDING;
+var CAMERA_RIGHT = window.innerWidth;
+var CAMERA_TOP = 0-CAMERA_TOP_PADDING;
+var CAMERA_BOTTOM = window.innerHeight;
 
 
 var camera = new THREE.OrthographicCamera(CAMERA_LEFT, CAMERA_RIGHT, CAMERA_TOP, CAMERA_BOTTOM, -NEAR, FAR);
-//var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-camera.position.x = 720;
-camera.position.y = 300;//350;
-camera.position.z = 25;
+
+camera.position.z = 0;//25;
 //camera.rotation.x = 0;// * (Math.PI / 180);
 
 // scene
