@@ -1,5 +1,5 @@
 var Hapi = require('hapi'),
-    options = { };
+    options = { cors: true };
 var masterConfig = require('./config/config');
 
 var serverConfig = masterConfig.config,
