@@ -171,9 +171,46 @@ $.ajax({
 	dataType: "json",
 	url: '/tilesets/tilesets.json',
 	data: {},
-	complete: function(jqXHR,textStatus) {
-	console.log({"a" : jqXHR , "b" : textStatus}); 
-}
+	complete: function(xhr,status) {
+		if (status === 'success') {
+			var data = JSON.parse(xhr.responseText);
+			if (data.tilesets.length > 0) {
+				var default_tileset_id = 1;
+				var tilesets = [];
+				var active_tileset = null;
+				
+				for (var i = 0; i < data.tilesets.length; i++) {
+					tilesets.push(data.tilesets[i]);
+					if (tilesets[i].tileset_id === default_tileset_id) {
+						active_tileset = tilesets[i];
+						break;
+					}
+				}
+				if (active_tileset) {
+					$.ajax({
+						dataType: "json",
+						url: active_tileset.location,
+						data: {},
+						complete: function(xhrTileset,statusTileset) {
+							if (statusTileset === 'success') {
+								var tileset_data = JSON.parse(xhrTileset.responseText);
+								console.log('tileset_data: ' + JSON.stringify(tileset_data));
+							}
+						}
+					});
+				} else {
+					//what do?
+				}
+				
+				
+				////for (var i = 0; i < tilesets.length; i++) {
+				//	if (tilesets[i]
+				//}
+			}
+		}
+		
+		//console.log({"a" : data , "b" : status}); 
+	}
 });
 //texture 
 var texture = new THREE.ImageUtils.loadTexture( "/tilesets/robots/floor.png" );
