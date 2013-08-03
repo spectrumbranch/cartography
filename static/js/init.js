@@ -125,7 +125,15 @@ keypress.combo("shift a", function() {
 
 // renderer
 var renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+
+// create and start the renderer; choose antialias setting.
+if ( Detector.webgl )
+	renderer = new THREE.WebGLRenderer( {antialias:true} );
+else
+	renderer = new THREE.CanvasRenderer(); 
+
+var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;	
+renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 document.body.appendChild(renderer.domElement);
 
 // camera
