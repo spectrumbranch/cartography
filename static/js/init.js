@@ -1,3 +1,53 @@
+var targetList = [];
+var projector, mouse = { x: 0, y: 0 };
+
+projector = new THREE.Projector();
+
+var app_focus = 'cartography';
+
+
+
+function onDocumentMouseDown( event ) 
+{
+	// the following line would stop any other event handler from firing
+	// (such as the mouse's TrackballControls)
+	// event.preventDefault();
+	
+	//console.log("Click.");
+	
+	// update the mouse variable
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+	
+	if (event.target.localName === 'canvas') {
+		app_focus = 'cartography';
+	} else {
+		app_focus = 'document';
+	}
+	
+	// find intersections -- TODO needs testing and work
+
+	// create a Ray with origin at the mouse position
+	//   and direction into the scene (camera direction)
+	var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+	projector.unprojectVector( vector, camera );
+	var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+	// create an array containing all objects in the scene with which the ray intersects
+	var intersects = ray.intersectObjects( targetList );
+	
+	// if there is one (or more) intersections
+	if ( intersects.length > 0 ) {
+		console.log("Hit @ " + toString( intersects[0].point ) );
+		// change the color of the closest face.
+		intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
+		intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
+	}
+
+}
+
+document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
 // revolutions per second
 //var angularSpeed = 0.2; 
 //var lastTime = 0;
@@ -26,35 +76,51 @@ function animate(){
 }
 
 keypress.combo("s", function() {
-    camera.position.y--;
+	if (app_focus === 'cartography') {
+		camera.position.y--;
+	}
 });
 
 keypress.combo("shift s", function() {
-    camera.position.y -= 10;
+	if (app_focus === 'cartography') {
+		camera.position.y -= 10;
+	}
 });
 
 keypress.combo("w", function() {
-    camera.position.y++;
+	if (app_focus === 'cartography') {
+		camera.position.y++;
+	}
 });
 
 keypress.combo("shift w", function() {
-    camera.position.y += 10;
+	if (app_focus === 'cartography') {
+		camera.position.y += 10;
+	}
 });
 
 keypress.combo("d", function() {
-    camera.position.x++;
+	if (app_focus === 'cartography') {
+		camera.position.x++;
+	}
 });
 
 keypress.combo("shift d", function() {
-    camera.position.x += 10;
+	if (app_focus === 'cartography') {
+		camera.position.x += 10;
+	}
 });
 
 keypress.combo("a", function() {
-    camera.position.x--;
+	if (app_focus === 'cartography') {
+		camera.position.x--;
+	}
 });
 
 keypress.combo("shift a", function() {
-    camera.position.x -= 10;
+	if (app_focus === 'cartography') {
+		camera.position.x -= 10;
+	}
 });
 
 // renderer
@@ -128,6 +194,7 @@ for (var i = 0; i < sides_x; i++) {
 		planemesh.position.y = j*sidelength;
 		planemesh.overdraw = true;
 		scene.add(planemesh);
+		targetList.push(planemesh);
 	}
 }
 
@@ -152,6 +219,7 @@ for (var i = 0; i < toolkit_sides_x; i++) {
 		planemesh.position.y = j * sidelength + toolkit_offset_y
 		planemesh.overdraw = true;
 		scene.add(planemesh);
+		targetList.push(planemesh);
 	}
 }
 
