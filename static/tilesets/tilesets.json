@@ -6,7 +6,7 @@
 		},
 		{
 			"tileset_id": 2,
-			"location": "/tilesets/grasslands"
+			"location": "/tilesets/grasslands/master.json"
 		}
 	]
  }
