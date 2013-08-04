@@ -4,7 +4,7 @@ var projector, mouse = { x: 0, y: 0 };
 projector = new THREE.Projector();
 
 var app_focus = 'cartography';
-
+var cartography_tilesets = {};
 
 
 function onDocumentMouseDown( event ) 
@@ -195,78 +195,78 @@ $.ajax({
 							if (statusTileset === 'success') {
 								var tileset_data = JSON.parse(xhrTileset.responseText);
 								console.log('tileset_data: ' + JSON.stringify(tileset_data));
+								
+								cartography_tilesets[tileset_data.id] = tileset_data.tiles;
+								
+								init_cartography();
 							}
 						}
 					});
 				} else {
-					//what do?
+					//TODO: load meta for all tilesets and have user make a decision
 				}
-				
-				
-				////for (var i = 0; i < tilesets.length; i++) {
-				//	if (tilesets[i]
-				//}
 			}
 		}
-		
-		//console.log({"a" : data , "b" : status}); 
 	}
 });
-//texture 
-var texture = new THREE.ImageUtils.loadTexture( "/tilesets/robots/floor.png" );
-texture.wrapS = THREE.RepeatWrapping; 
-texture.wrapT = THREE.RepeatWrapping;
-var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide });
+
+var init_cartography = function() {
+	//texture 
+	var texture = new THREE.ImageUtils.loadTexture(normalizePath("/tilesets/robots/floor.png"));
+	texture.wrapS = THREE.RepeatWrapping; 
+	texture.wrapT = THREE.RepeatWrapping;
+	var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide });
 
 
-//global initial conditions
-var sidelength = 48;
+	//global initial conditions
+	var sidelength = 48;
 
-//map initial conditions
-var sides_x = 16;
-var sides_y = 16;
+	//map initial conditions
+	var sides_x = 16;
+	var sides_y = 16;
 
-//Create map potion of the interface
-var map_tiles = Cartography.createArray(sides_x, sides_y);
+	//Create map potion of the interface
+	var map_tiles = Cartography.createArray(sides_x, sides_y);
 
-//planes for map
-for (var i = 0; i < sides_x; i++) {
-	for (var j = 0; j < sides_y; j++) {
-		var plane = new THREE.PlaneGeometry(sidelength, sidelength);
-		var planemesh = new THREE.Mesh(plane, material);
-		map_tiles[i,j] = { plane: plane, mesh: planemesh };
-		planemesh.position.x = i*sidelength;
-		planemesh.position.y = j*sidelength;
-		planemesh.overdraw = true;
-		scene.add(planemesh);
-		targetList.push(planemesh);
+	//planes for map
+	for (var i = 0; i < sides_x; i++) {
+		for (var j = 0; j < sides_y; j++) {
+			var plane = new THREE.PlaneGeometry(sidelength, sidelength);
+			var planemesh = new THREE.Mesh(plane, material);
+			map_tiles[i,j] = { plane: plane, mesh: planemesh };
+			planemesh.position.x = i*sidelength;
+			planemesh.position.y = j*sidelength;
+			planemesh.overdraw = true;
+			scene.add(planemesh);
+			targetList.push(planemesh);
+		}
 	}
-}
 
-//toolkit initial conditions
-var toolkit_sides_x = 3;
-var toolkit_sides_y = 16;
-var toolkit_offset_padding_x = sidelength;
-var toolkit_offset_padding_y = 0;
-var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
-var toolkit_offset_y = 0;//sides_y * sidelength + toolkit_offset_padding_y;
+	//toolkit initial conditions
+	var toolkit_sides_x = 3;
+	var toolkit_sides_y = 16;
+	var toolkit_offset_padding_x = sidelength;
+	var toolkit_offset_padding_y = 0;
+	var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
+	var toolkit_offset_y = 0;//sides_y * sidelength + toolkit_offset_padding_y;
 
-//Create toolkit portion of the interface
-var toolkit_tiles = Cartography.createArray(toolkit_sides_x, toolkit_sides_y);
+	//Create toolkit portion of the interface
+	var toolkit_tiles = Cartography.createArray(toolkit_sides_x, toolkit_sides_y);
 
-//planes for toolkit
-for (var i = 0; i < toolkit_sides_x; i++) {
-	for (var j = 0; j < toolkit_sides_y; j++) {
-		var plane = new THREE.PlaneGeometry(sidelength, sidelength);
-		var planemesh = new THREE.Mesh(plane, material);
-		toolkit_tiles[i,j] = { plane: plane, mesh: planemesh };
-		planemesh.position.x =  i * sidelength + toolkit_offset_x;
-		planemesh.position.y = j * sidelength + toolkit_offset_y
-		planemesh.overdraw = true;
-		scene.add(planemesh);
-		targetList.push(planemesh);
+	//planes for toolkit
+	for (var i = 0; i < toolkit_sides_x; i++) {
+		for (var j = 0; j < toolkit_sides_y; j++) {
+			var plane = new THREE.PlaneGeometry(sidelength, sidelength);
+			var planemesh = new THREE.Mesh(plane, material);
+			toolkit_tiles[i,j] = { plane: plane, mesh: planemesh };
+			planemesh.position.x =  i * sidelength + toolkit_offset_x;
+			planemesh.position.y = j * sidelength + toolkit_offset_y
+			planemesh.overdraw = true;
+			scene.add(planemesh);
+			targetList.push(planemesh);
+		}
 	}
-}
 
-// start animation
-animate();
+	// start animation
+	animate();
+}
