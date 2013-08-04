@@ -5,6 +5,7 @@ projector = new THREE.Projector();
 
 var app_focus = 'cartography';
 var cartography_tilesets = {};
+var active_cartography_tileset_id = null;
 
 
 function onDocumentMouseDown( event ) 
@@ -196,7 +197,8 @@ $.ajax({
 								var tileset_data = JSON.parse(xhrTileset.responseText);
 								console.log('tileset_data: ' + JSON.stringify(tileset_data));
 								
-								cartography_tilesets[tileset_data.id] = tileset_data.tiles;
+								cartography_tilesets[tileset_data.id] = {master: active_tileset.location, tiles: tileset_data.tiles};
+								active_cartography_tileset_id = tileset_data.id;
 								
 								init_cartography();
 							}
@@ -248,22 +250,43 @@ var init_cartography = function() {
 	var toolkit_offset_padding_x = sidelength;
 	var toolkit_offset_padding_y = 0;
 	var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
-	var toolkit_offset_y = 0;//sides_y * sidelength + toolkit_offset_padding_y;
+	var toolkit_offset_y = 0;
 
 	//Create toolkit portion of the interface
 	var toolkit_tiles = Cartography.createArray(toolkit_sides_x, toolkit_sides_y);
 
 	//planes for toolkit
-	for (var i = 0; i < toolkit_sides_x; i++) {
-		for (var j = 0; j < toolkit_sides_y; j++) {
+	
+	if (active_cartography_tileset_id != null && cartography_tilesets[active_cartography_tileset_id] !== 'undefined') {
+		var active_tileset = cartography_tilesets[active_cartography_tileset_id];
+		
+		var x = 0;
+		var y = 0;
+		for (var c = 0; c < active_tileset.tiles.length; c++) {
+			var the_tile = active_tileset.tiles[c];
 			var plane = new THREE.PlaneGeometry(sidelength, sidelength);
+
+			//texture
+			var toolkit_texture = new THREE.ImageUtils.loadTexture(normalizePath(active_tileset.master + '/../' + the_tile.img_url));
+			toolkit_texture.wrapS = THREE.RepeatWrapping; 
+			toolkit_texture.wrapT = THREE.RepeatWrapping;
+			var material = new THREE.MeshBasicMaterial({map: toolkit_texture, side: THREE.DoubleSide });
+			
 			var planemesh = new THREE.Mesh(plane, material);
-			toolkit_tiles[i,j] = { plane: plane, mesh: planemesh };
-			planemesh.position.x =  i * sidelength + toolkit_offset_x;
-			planemesh.position.y = j * sidelength + toolkit_offset_y
+			toolkit_tiles[x,y] = { plane: plane, mesh: planemesh };
+			planemesh.position.x = x * sidelength + toolkit_offset_x;
+			planemesh.position.y = y * sidelength + toolkit_offset_y
 			planemesh.overdraw = true;
 			scene.add(planemesh);
 			targetList.push(planemesh);
+			
+			x++;
+			if (x >= toolkit_sides_x) {
+				x = 0;
+				y++;
+			}
+			//TODO: Fix the fact that y can overflow off the page for tilesets larger than toolkit_sides_x * toolkit_sides_y
+			//		Paging will be needed.
 		}
 	}
 
