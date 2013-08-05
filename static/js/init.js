@@ -58,22 +58,34 @@ document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 var NEAR = 1;
 var FAR = 1000;
 
+
+var lastTimeMs = null;
+
+var master = [];
+
+master.push(function() {
+	renderer.render(scene, camera);
+})
+
 // this function is executed on each animation frame
-function animate(){
+function animate(nowMs) {
 	// update
 	//var time = (new Date()).getTime();
 	//var timeDiff = time - lastTime;
 	//var angleChange = angularSpeed * timeDiff * 2 * Math.PI / 1000;
 	//plane.rotation.z += angleChange;
-	//lastTime = time;
-
-	// render
-	renderer.render(scene, camera);
+	//lastTime = time
+	
+	var lastTimeMs = lastTimeMs || nowMs-1000/60;
+	var deltaMs = Math.min(200, nowMs - lastTimeMs);
+	lastTimeMs = nowMs;
+	
+	master.forEach(function(gear) {
+		gear(deltaMs/1000, nowMs/1000);
+	});
 
 	// request new frame
-	requestAnimationFrame(function(){
-		animate();
-	});
+	requestAnimationFrame(animate);
 }
 
 keypress.combo("s", function() {
