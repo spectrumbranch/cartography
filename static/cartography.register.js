@@ -26,6 +26,12 @@ $(document).ready(function () {
 			errElem.remove();
 		}
 	};
+	
+	var response=window.location.search.replace("?","");
+	if (response == "confirmed")
+	{$('#confirmed-modal').foundation('reveal', 'open');}
+	
+	
 	$('#register-btn').click(function() {
 		clearErrors();
 		
