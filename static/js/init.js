@@ -14,7 +14,7 @@ function onDocumentMouseDown( event )
 	// (such as the mouse's TrackballControls)
 	// event.preventDefault();
 	
-	//console.log("Click.");
+	console.log("Click.");
 	
 	// update the mouse variable
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -31,18 +31,21 @@ function onDocumentMouseDown( event )
 	// create a Ray with origin at the mouse position
 	//   and direction into the scene (camera direction)
 	var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-	projector.unprojectVector( vector, camera );
-	var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+	
+	var ray = projector.pickingRay(vector, camera);
+	var intersects = ray.intersectObjects(targetList);
+	//projector.unprojectVector( vector, camera );
+	//var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 
 	// create an array containing all objects in the scene with which the ray intersects
-	var intersects = ray.intersectObjects( targetList );
+	//var intersects = ray.intersectObjects( targetList );
 	
 	// if there is one (or more) intersections
 	if ( intersects.length > 0 ) {
-		console.log("Hit @ " + toString( intersects[0].point ) );
+		console.log("Hit @ " + intersects[0].point  );
 		// change the color of the closest face.
-		intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
-		intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
+		//intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
+		//intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
 	}
 
 }
