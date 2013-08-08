@@ -12,7 +12,7 @@ function onDocumentMouseDown( event )
 {
 	// the following line would stop any other event handler from firing
 	// (such as the mouse's TrackballControls)
-	// event.preventDefault();
+	// 
 	
 	console.log("Click.");
 	
@@ -21,6 +21,7 @@ function onDocumentMouseDown( event )
 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 	
 	if (event.target.localName === 'canvas') {
+		event.preventDefault();
 		app_focus = 'cartography';
 	} else {
 		app_focus = 'document';
@@ -42,10 +43,12 @@ function onDocumentMouseDown( event )
 	
 	// if there is one (or more) intersections
 	if ( intersects.length > 0 ) {
-		console.log("Hit @ " + intersects[0].point  );
+		console.log("Hit @ (" + intersects[0].point.x + ',' + intersects[0].point.y + ')');
 		// change the color of the closest face.
 		//intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
 		//intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
+		intersects[0].object.position.z = 10;
+		
 	}
 
 }
