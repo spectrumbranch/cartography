@@ -53,7 +53,12 @@ function onDocumentMouseDown( event )
 
 }
 
+
+
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+//$('canvas').attr('id', 'ztarget');
+//document.getElementById('ztarget').addEventListener( 'mousedown', onDocumentMouseDown, false );
+
 
 // revolutions per second
 //var angularSpeed = 0.2; 
@@ -143,7 +148,7 @@ keypress.combo("shift a", function() {
 });
 
 // renderer
-var renderer = new THREE.WebGLRenderer();
+var renderer = {};// = new THREE.WebGLRenderer();
 
 // create and start the renderer; choose antialias setting.
 if ( Detector.webgl )
