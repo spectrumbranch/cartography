@@ -7,6 +7,8 @@ var app_focus = 'cartography';
 var cartography_tilesets = {};
 var active_cartography_tileset_id = null;
 
+var toolkit_selector = {};
+
 var renderer_id = 'cartography_canvas';
 
 
@@ -73,7 +75,7 @@ function onDocumentMouseDown( event )
 		//intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
 		//intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
 		//TODO: do actual things with mouse click, now that we're properly clicking tiles.
-		intersects[0].object.position.z = 10;
+		//intersects[0].object.position.z -= 5;
 		
 	}
 
@@ -340,6 +342,19 @@ var init_cartography = function() {
 			//		Paging will be needed.
 		}
 	}
+	
+	//selector (testing)
+	var selector_geometry = new THREE.PlaneGeometry(sidelength, sidelength);
+	var selector_material = new THREE.MeshBasicMaterial({ color:0x00ff00, side: THREE.DoubleSide, transparent:true, opacity: 0.5 });
+	var selector_mesh = new THREE.Mesh(selector_geometry, selector_material);
+	selector_mesh.position.x = toolkit_offset_x;
+	selector_mesh.position.y = toolkit_offset_y;
+	//selector_mesh.position.z = 0;
+	
+	toolkit_selector = selector_mesh;
+	
+	scene.add(toolkit_selector);
+	
 
 	// start animation
 	animate();
