@@ -88,7 +88,7 @@ function animate(nowMs) {
 	//plane.rotation.z += angleChange;
 	//lastTime = time
 	
-	var lastTimeMs = lastTimeMs || nowMs-1000/60;
+	lastTimeMs = lastTimeMs || nowMs-1000/60;
 	var deltaMs = Math.min(200, nowMs - lastTimeMs);
 	lastTimeMs = nowMs;
 	
