@@ -22,21 +22,21 @@
 <li class="has-form">
 	<form 	id="login_form" 
 			action="/login" 
-			method="post" 
-			accept-charset="utf-8" 
+			accept-charset="utf-8"
+           method="post"
 		>
 		<input type="hidden" name="view" value="true"/>
 		<div class="row">
 			<div class="large-12 columns">
 				<div class="row collapse">
 					<div class="small-5 columns">
-					  <input type="text" placeholder="username" name="userid" />
+					  <input type="text" placeholder="username" name="userid" id="loginuserid" />
 					</div>
 					<div class="small-5 columns">
-					  <input type="password" placeholder="password" name="passwrd" />
+					  <input type="password" placeholder="password" name="passwrd" id="loginpassword" />
 					</div>
 					<div class="small-2 columns">
-					  <input type="submit" class="button prefix" value="Login" />
+					  <input type="submit" class="button prefix" value="Login" id="login-click" />
 					</div>
 				</div>
 			</div>
@@ -45,6 +45,14 @@
 </li>
 <div id="error-modal" class="reveal-modal">
   <h2>Aww Shucks!</h2><p>It appears that the information you have tried to sign in with is not valid. Please try again with a valid username and password! If you happened to forget your password click here</p><a class="close-reveal-modal">&#215;</a>
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="invalid-login-modal" class="reveal-modal">
+  <h2>Aww Shucks!</h2><p>
+  Please check your login information. The following rules apply:
+  <br>User ID must be between 5-30 characters
+  <br>Password must be between 8 or more characters
+  </p><a class="close-reveal-modal">&#215;</a>
   <a class="close-reveal-modal">&#215;</a>
 </div>
 <div id="confirmed-modal" class="reveal-modal">
