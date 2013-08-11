@@ -7,32 +7,60 @@ var app_focus = 'cartography';
 var cartography_tilesets = {};
 var active_cartography_tileset_id = null;
 
+var toolkit_selector = {};
+
+var renderer_id = 'cartography_canvas';
+
 
 function onDocumentMouseDown( event ) 
 {
 	// the following line would stop any other event handler from firing
 	// (such as the mouse's TrackballControls)
-	// event.preventDefault();
+	// 
 	
 	console.log("Click.");
 	
+	var canvas_width = document.getElementById(renderer_id).width;
+	var canvas_height = document.getElementById(renderer_id).height;
+	var $the_renderer = $('#'+renderer_id)
+	var canvas_offset_x = $the_renderer.offset().left;
+	var canvas_offset_y = $the_renderer.offset().top;
+	var scroll_offset_x = $(window).scrollLeft();
+	var scroll_offset_y = $(window).scrollTop();
+	
 	// update the mouse variable
-	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+	mouse.x = ( (event.clientX + scroll_offset_x - canvas_offset_x) / canvas_width ) * 2 - 1;
+	mouse.y = - ( (event.clientY + scroll_offset_y - canvas_offset_y) / canvas_height ) * 2 + 1;
+	
+	
+	var vecOrigin = new THREE.Vector3( mouse.x, mouse.y, - 1 );
+	var vecTarget = new THREE.Vector3( mouse.x, mouse.y, 1 );
 	
 	if (event.target.localName === 'canvas') {
+		event.preventDefault();
 		app_focus = 'cartography';
 	} else {
 		app_focus = 'document';
 	}
 	
+	projector.unprojectVector( vecOrigin, camera );
+	projector.unprojectVector( vecTarget, camera );
+	vecTarget = new THREE.Vector3( vecTarget.x -vecOrigin.x, vecTarget.y -vecOrigin.y, vecTarget.z -vecOrigin.z);
+	vecTarget.normalize();
+
+	var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+	var ray = projector.pickingRay(vector, camera);
+	ray.origin = vecOrigin;
+	ray.direction = vecTarget;
+	//var intersect = ray.intersectObjects(targetList);
+
 	// find intersections -- TODO needs testing and work
 
 	// create a Ray with origin at the mouse position
 	//   and direction into the scene (camera direction)
-	var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+	//
 	
-	var ray = projector.pickingRay(vector, camera);
+	//var ray = projector.pickingRay(vector, camera);
 	var intersects = ray.intersectObjects(targetList);
 	//projector.unprojectVector( vector, camera );
 	//var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
@@ -42,15 +70,23 @@ function onDocumentMouseDown( event )
 	
 	// if there is one (or more) intersections
 	if ( intersects.length > 0 ) {
-		console.log("Hit @ " + intersects[0].point  );
+		console.log("Hit @ (" + intersects[0].point.x + ',' + intersects[0].point.y + ')');
 		// change the color of the closest face.
 		//intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
 		//intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
+		//TODO: do actual things with mouse click, now that we're properly clicking tiles.
+		//intersects[0].object.position.z -= 5;
+		
 	}
 
 }
 
+
+
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+//$('canvas').attr('id', 'ztarget');
+//document.getElementById('ztarget').addEventListener( 'mousedown', onDocumentMouseDown, false );
+
 
 // revolutions per second
 //var angularSpeed = 0.2; 
@@ -140,7 +176,7 @@ keypress.combo("shift a", function() {
 });
 
 // renderer
-var renderer = new THREE.WebGLRenderer();
+var renderer = {};// = new THREE.WebGLRenderer();
 
 // create and start the renderer; choose antialias setting.
 if ( Detector.webgl )
@@ -150,6 +186,8 @@ else
 
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;	
 renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+renderer.domElement.id = renderer_id;
+
 document.body.appendChild(renderer.domElement);
 
 // camera
@@ -157,9 +195,9 @@ const CAMERA_LEFT_PADDING = 50;
 const CAMERA_TOP_PADDING = 25
 
 var CAMERA_LEFT = 0-CAMERA_LEFT_PADDING;
-var CAMERA_RIGHT = window.innerWidth;
+var CAMERA_RIGHT = SCREEN_WIDTH;
 var CAMERA_TOP = 0-CAMERA_TOP_PADDING;
-var CAMERA_BOTTOM = window.innerHeight;
+var CAMERA_BOTTOM = SCREEN_HEIGHT;
 
 
 var camera = new THREE.OrthographicCamera(CAMERA_LEFT, CAMERA_RIGHT, CAMERA_TOP, CAMERA_BOTTOM, -NEAR, FAR);
@@ -304,6 +342,19 @@ var init_cartography = function() {
 			//		Paging will be needed.
 		}
 	}
+	
+	//selector (testing)
+	var selector_geometry = new THREE.PlaneGeometry(sidelength, sidelength);
+	var selector_material = new THREE.MeshBasicMaterial({ color:0x00ff00, side: THREE.DoubleSide, transparent:true, opacity: 0.5 });
+	var selector_mesh = new THREE.Mesh(selector_geometry, selector_material);
+	selector_mesh.position.x = toolkit_offset_x;
+	selector_mesh.position.y = toolkit_offset_y;
+	//selector_mesh.position.z = 0;
+	
+	toolkit_selector = selector_mesh;
+	
+	scene.add(toolkit_selector);
+	
 
 	// start animation
 	animate();
