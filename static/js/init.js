@@ -8,95 +8,68 @@ var cartography_tilesets = {};
 var active_cartography_tileset_id = null;
 
 var toolkit_selector = {};
+var map_selector = {};
 
 var renderer_id = 'cartography_canvas';
 
 
-function onDocumentMouseDown( event ) 
-{
-	// the following line would stop any other event handler from firing
-	// (such as the mouse's TrackballControls)
-	// 
-	
-	console.log("Click.");
-	
-	var canvas_width = document.getElementById(renderer_id).width;
-	var canvas_height = document.getElementById(renderer_id).height;
-	var $the_renderer = $('#'+renderer_id)
-	var canvas_offset_x = $the_renderer.offset().left;
-	var canvas_offset_y = $the_renderer.offset().top;
-	var scroll_offset_x = $(window).scrollLeft();
-	var scroll_offset_y = $(window).scrollTop();
-	
-	// update the mouse variable
-	mouse.x = ( (event.clientX + scroll_offset_x - canvas_offset_x) / canvas_width ) * 2 - 1;
-	mouse.y = - ( (event.clientY + scroll_offset_y - canvas_offset_y) / canvas_height ) * 2 + 1;
-	
-	
-	var vecOrigin = new THREE.Vector3( mouse.x, mouse.y, - 1 );
-	var vecTarget = new THREE.Vector3( mouse.x, mouse.y, 1 );
-	
+function onDocumentMouseDown(event) {
 	if (event.target.localName === 'canvas') {
 		event.preventDefault();
 		app_focus = 'cartography';
+		
+		var canvas_width = document.getElementById(renderer_id).width;
+		var canvas_height = document.getElementById(renderer_id).height;
+		var $the_renderer = $('#'+renderer_id)
+		var canvas_offset_x = $the_renderer.offset().left;
+		var canvas_offset_y = $the_renderer.offset().top;
+		var scroll_offset_x = $(window).scrollLeft();
+		var scroll_offset_y = $(window).scrollTop();
+		
+		// update the mouse variable
+		mouse.x = ( (event.clientX + scroll_offset_x - canvas_offset_x) / canvas_width ) * 2 - 1;
+		mouse.y = - ( (event.clientY + scroll_offset_y - canvas_offset_y) / canvas_height ) * 2 + 1;
+		
+		var vecOrigin = new THREE.Vector3( mouse.x, mouse.y, - 1 );
+		var vecTarget = new THREE.Vector3( mouse.x, mouse.y, 1 );
+		
+		projector.unprojectVector( vecOrigin, camera );
+		projector.unprojectVector( vecTarget, camera );
+		vecTarget = new THREE.Vector3( vecTarget.x -vecOrigin.x, vecTarget.y -vecOrigin.y, vecTarget.z -vecOrigin.z);
+		vecTarget.normalize();
+
+		// create a Ray with origin at the mouse position and direction into the scene (camera direction)
+		var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+		var ray = projector.pickingRay(vector, camera);
+		ray.origin = vecOrigin;
+		ray.direction = vecTarget;
+
+		// create an array containing all objects in the scene with which the ray intersects
+		var intersects = ray.intersectObjects(targetList);
+		
+		// if there is one (or more) intersections
+		if (intersects.length > 0) {
+			console.log("Hit @ (" + intersects[0].object.position.x + ',' + intersects[0].object.position.y + ')');
+			
+			//Test to see if the click is inside the toolkit.
+			//This is not the best solution, but it will do the trick for now.
+			if (intersects[0].object.position.x >= toolkit_offset_x) {
+				toolkit_selector.position.x = intersects[0].object.position.x;
+				toolkit_selector.position.y = intersects[0].object.position.y;
+			} else {
+				map_selector.position.x = intersects[0].object.position.x;
+				map_selector.position.y = intersects[0].object.position.y;
+			}
+		}
 	} else {
 		app_focus = 'document';
 	}
-	
-	projector.unprojectVector( vecOrigin, camera );
-	projector.unprojectVector( vecTarget, camera );
-	vecTarget = new THREE.Vector3( vecTarget.x -vecOrigin.x, vecTarget.y -vecOrigin.y, vecTarget.z -vecOrigin.z);
-	vecTarget.normalize();
-
-	var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-	var ray = projector.pickingRay(vector, camera);
-	ray.origin = vecOrigin;
-	ray.direction = vecTarget;
-	//var intersect = ray.intersectObjects(targetList);
-
-	// find intersections -- TODO needs testing and work
-
-	// create a Ray with origin at the mouse position
-	//   and direction into the scene (camera direction)
-	//
-	
-	//var ray = projector.pickingRay(vector, camera);
-	var intersects = ray.intersectObjects(targetList);
-	//projector.unprojectVector( vector, camera );
-	//var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-
-	// create an array containing all objects in the scene with which the ray intersects
-	//var intersects = ray.intersectObjects( targetList );
-	
-	// if there is one (or more) intersections
-	if ( intersects.length > 0 ) {
-		console.log("Hit @ (" + intersects[0].point.x + ',' + intersects[0].point.y + ')');
-		// change the color of the closest face.
-		//intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
-		//intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
-		//TODO: do actual things with mouse click, now that we're properly clicking tiles.
-		//intersects[0].object.position.z -= 5;
-		
-	}
-
 }
 
-
-
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-//$('canvas').attr('id', 'ztarget');
-//document.getElementById('ztarget').addEventListener( 'mousedown', onDocumentMouseDown, false );
 
-
-// revolutions per second
-//var angularSpeed = 0.2; 
-//var lastTime = 0;
-
-//var VIEW_ANGLE = 170;
-//var ASPECT = window.innerWidth / window.innerHeight;
 var NEAR = 1;
 var FAR = 1000;
-
 
 var lastTimeMs = null;
 
@@ -202,9 +175,6 @@ var CAMERA_BOTTOM = SCREEN_HEIGHT;
 
 var camera = new THREE.OrthographicCamera(CAMERA_LEFT, CAMERA_RIGHT, CAMERA_TOP, CAMERA_BOTTOM, -NEAR, FAR);
 
-camera.position.z = 0;//25;
-//camera.rotation.x = 0;// * (Math.PI / 180);
-
 // scene
 var scene = new THREE.Scene();
 
@@ -213,14 +183,6 @@ var scene = new THREE.Scene();
 // 1.) Get available local tileset data.
 // 2.) Get user's active tileset.
 
-//console.log('test1');
-/*
-$.getJSON('/tilesets/tilesets.json', function(data) {
-	console.log('test');
-	console.log(data.toString());
-}).done(function(data) {
-	console.log('test3');
-})*/
 $.ajax({
 	dataType: "json",
 	url: '/tilesets/tilesets.json',
@@ -265,6 +227,28 @@ $.ajax({
 	}
 });
 
+
+//global initial conditions
+var sidelength = 48;
+
+//map initial conditions
+var sides_x = 16;
+var sides_y = 16;
+
+//map initial conditions
+var map_offset_x = 0;
+var map_offset_y = 0;
+
+//toolkit initial conditions
+var toolkit_sides_x = 3;
+var toolkit_sides_y = 16;
+var toolkit_offset_padding_x = sidelength;
+var toolkit_offset_padding_y = 0;
+var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
+var toolkit_offset_y = 0;
+
+
+
 var init_cartography = function() {
 	//texture 
 	var texture = new THREE.ImageUtils.loadTexture(normalizePath("/tilesets/robots/floor.png"));
@@ -273,12 +257,7 @@ var init_cartography = function() {
 	var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide });
 
 
-	//global initial conditions
-	var sidelength = 48;
 
-	//map initial conditions
-	var sides_x = 16;
-	var sides_y = 16;
 
 	//Create map potion of the interface
 	var map_tiles = Cartography.createArray(sides_x, sides_y);
@@ -289,21 +268,15 @@ var init_cartography = function() {
 			var plane = new THREE.PlaneGeometry(sidelength, sidelength);
 			var planemesh = new THREE.Mesh(plane, material);
 			map_tiles[i,j] = { plane: plane, mesh: planemesh };
-			planemesh.position.x = i*sidelength;
-			planemesh.position.y = j*sidelength;
+			planemesh.position.x = i * sidelength + map_offset_x;
+			planemesh.position.y = j * sidelength + map_offset_y;
 			planemesh.overdraw = true;
 			scene.add(planemesh);
 			targetList.push(planemesh);
 		}
 	}
 
-	//toolkit initial conditions
-	var toolkit_sides_x = 3;
-	var toolkit_sides_y = 16;
-	var toolkit_offset_padding_x = sidelength;
-	var toolkit_offset_padding_y = 0;
-	var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
-	var toolkit_offset_y = 0;
+
 
 	//Create toolkit portion of the interface
 	var toolkit_tiles = Cartography.createArray(toolkit_sides_x, toolkit_sides_y);
@@ -343,15 +316,21 @@ var init_cartography = function() {
 		}
 	}
 	
-	//selector (testing)
-	var selector_geometry = new THREE.PlaneGeometry(sidelength, sidelength);
-	var selector_material = new THREE.MeshBasicMaterial({ color:0x00ff00, side: THREE.DoubleSide, transparent:true, opacity: 0.5 });
-	var selector_mesh = new THREE.Mesh(selector_geometry, selector_material);
-	selector_mesh.position.x = toolkit_offset_x;
-	selector_mesh.position.y = toolkit_offset_y;
-	//selector_mesh.position.z = 0;
+	//selector (map)
+	var map_selector_geometry = new THREE.PlaneGeometry(sidelength, sidelength);
+	var map_selector_material = new THREE.MeshBasicMaterial({ color:0xff00ff, side: THREE.DoubleSide, transparent:true, opacity: 0.5 });
+	map_selector = new THREE.Mesh(map_selector_geometry, map_selector_material);
+	map_selector.position.x = map_offset_x;
+	map_selector.position.y = map_offset_y;
 	
-	toolkit_selector = selector_mesh;
+	scene.add(map_selector);
+	
+	//selector (toolkit)
+	var toolkit_selector_geometry = new THREE.PlaneGeometry(sidelength, sidelength);
+	var toolkit_selector_material = new THREE.MeshBasicMaterial({ color:0x00ff00, side: THREE.DoubleSide, transparent:true, opacity: 0.5 });
+	toolkit_selector = new THREE.Mesh(toolkit_selector_geometry, toolkit_selector_material);
+	toolkit_selector.position.x = toolkit_offset_x;
+	toolkit_selector.position.y = toolkit_offset_y;
 	
 	scene.add(toolkit_selector);
 	
