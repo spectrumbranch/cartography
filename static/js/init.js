@@ -12,6 +12,35 @@ var map_selector = {};
 
 var renderer_id = 'cartography_canvas';
 
+var Cartography = Cartography || {};
+
+//global initial conditions
+var sidelength = 48;
+
+//map initial conditions
+var sides_x = 16;
+var sides_y = 16;
+
+//map initial conditions
+var map_offset_x = 0;
+var map_offset_y = 0;
+
+//toolkit initial conditions
+var toolkit_sides_x = 3;
+var toolkit_sides_y = 16;
+var toolkit_offset_padding_x = sidelength;
+var toolkit_offset_padding_y = 0;
+var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
+var toolkit_offset_y = 0;
+
+Cartography.Map = Cartography.Map || {};
+Cartography.Map.coordToTile = function(coords) {
+	//TODO: Still need to work on this. Should return actual tile object, and needs to remain within bounds or error if not
+	//coords expected to be { x: num, y: num }
+	var tile_x = Math.floor(coords.x / sidelength);
+	var tile_y = Math.floor(coords.y / sidelength);
+	return { x: tile_x, y: tile_y };
+};
 
 function onDocumentMouseDown(event) {
 	if (event.target.localName === 'canvas') {
@@ -49,7 +78,8 @@ function onDocumentMouseDown(event) {
 		
 		// if there is one (or more) intersections
 		if (intersects.length > 0) {
-			console.log("Hit @ (" + intersects[0].object.position.x + ',' + intersects[0].object.position.y + ')');
+			var map_click = Cartography.Map.coordToTile({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
+			console.log("Hit Tile: (" + map_click.x + ',' + map_click.y + ')');
 			
 			//Test to see if the click is inside the toolkit.
 			//This is not the best solution, but it will do the trick for now.
@@ -66,7 +96,7 @@ function onDocumentMouseDown(event) {
 	}
 }
 
-document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+document.addEventListener('mousedown', onDocumentMouseDown, false);
 
 var NEAR = 1;
 var FAR = 1000;
@@ -228,24 +258,7 @@ $.ajax({
 });
 
 
-//global initial conditions
-var sidelength = 48;
 
-//map initial conditions
-var sides_x = 16;
-var sides_y = 16;
-
-//map initial conditions
-var map_offset_x = 0;
-var map_offset_y = 0;
-
-//toolkit initial conditions
-var toolkit_sides_x = 3;
-var toolkit_sides_y = 16;
-var toolkit_offset_padding_x = sidelength;
-var toolkit_offset_padding_y = 0;
-var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
-var toolkit_offset_y = 0;
 
 
 
