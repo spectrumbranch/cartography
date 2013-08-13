@@ -7,6 +7,9 @@ var app_focus = 'cartography';
 var cartography_tilesets = {};
 var active_cartography_tileset_id = null;
 
+var map_tiles = [[]];
+var toolkit_tiles = [[]];
+
 var toolkit_selector = {};
 var map_selector = {};
 
@@ -34,13 +37,27 @@ var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
 var toolkit_offset_y = 0;
 
 Cartography.Map = Cartography.Map || {};
-Cartography.Map.coordToTile = function(coords) {
-	//TODO: Still need to work on this. Should return actual tile object, and needs to remain within bounds or error if not
+Cartography.Map.coordToGrid = function(coords) {
+	var grid_result = null;
+	//TODO: Still need to work on this. Should return actual tile object
 	//coords expected to be { x: num, y: num }
-	var tile_x = Math.floor(coords.x / sidelength);
-	var tile_y = Math.floor(coords.y / sidelength);
-	return { x: tile_x, y: tile_y };
+	if ('x' in coords && 'y' in coords) {
+		var tile_x = Math.floor(coords.x / sidelength);
+		var tile_y = Math.floor(coords.y / sidelength);
+		if (tile_x >= 0 && tile_x < sides_x && tile_y >= 0 && tile_y < sides_y) {
+			grid_result = { x: tile_x, y: tile_y };
+		}
+	}
+	
+	return grid_result;
 };
+Cartography.Map.getTile = function(gridCoords) {
+	return map_tiles[gridCoords.x][gridCoords.y];
+};
+Cartography.Map.coordToTile = function(coords) {
+	return Cartography.Map.getTile(Cartography.Map.coordToGrid(coords));
+}
+
 
 function onDocumentMouseDown(event) {
 	if (event.target.localName === 'canvas') {
@@ -78,8 +95,10 @@ function onDocumentMouseDown(event) {
 		
 		// if there is one (or more) intersections
 		if (intersects.length > 0) {
-			var map_click = Cartography.Map.coordToTile({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
-			console.log("Hit Tile: (" + map_click.x + ',' + map_click.y + ')');
+			//var map_click = Cartography.Map.coordToGrid({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
+			var clicked_map_tile = Cartography.Map.coordToTile({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
+			//console.log("Hit Tile: (" + map_click.x + ',' + map_click.y + ')');
+			console.log('Hit tile: ' + clicked_map_tile.mesh.position.x + ', ' + clicked_map_tile.mesh.position.y);
 			
 			//Test to see if the click is inside the toolkit.
 			//This is not the best solution, but it will do the trick for now.
@@ -178,8 +197,7 @@ keypress.combo("shift a", function() {
 	}
 });
 
-// renderer
-var renderer = {};// = new THREE.WebGLRenderer();
+var renderer = {};
 
 // create and start the renderer; choose antialias setting.
 if ( Detector.webgl )
@@ -269,18 +287,15 @@ var init_cartography = function() {
 	texture.wrapT = THREE.RepeatWrapping;
 	var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide });
 
-
-
-
 	//Create map potion of the interface
-	var map_tiles = Cartography.createArray(sides_x, sides_y);
+	map_tiles = Cartography.createArray(sides_x, sides_y);
 
 	//planes for map
 	for (var i = 0; i < sides_x; i++) {
 		for (var j = 0; j < sides_y; j++) {
 			var plane = new THREE.PlaneGeometry(sidelength, sidelength);
 			var planemesh = new THREE.Mesh(plane, material);
-			map_tiles[i,j] = { plane: plane, mesh: planemesh };
+			map_tiles[i][j] = { plane: plane, mesh: planemesh };
 			planemesh.position.x = i * sidelength + map_offset_x;
 			planemesh.position.y = j * sidelength + map_offset_y;
 			planemesh.overdraw = true;
@@ -292,7 +307,7 @@ var init_cartography = function() {
 
 
 	//Create toolkit portion of the interface
-	var toolkit_tiles = Cartography.createArray(toolkit_sides_x, toolkit_sides_y);
+	toolkit_tiles = Cartography.createArray(toolkit_sides_x, toolkit_sides_y);
 
 	//planes for toolkit
 	
@@ -312,7 +327,7 @@ var init_cartography = function() {
 			var material = new THREE.MeshBasicMaterial({map: toolkit_texture, side: THREE.DoubleSide });
 			
 			var planemesh = new THREE.Mesh(plane, material);
-			toolkit_tiles[x,y] = { plane: plane, mesh: planemesh };
+			toolkit_tiles[x][y] = { plane: plane, mesh: planemesh };
 			planemesh.position.x = x * sidelength + toolkit_offset_x;
 			planemesh.position.y = y * sidelength + toolkit_offset_y
 			planemesh.overdraw = true;
