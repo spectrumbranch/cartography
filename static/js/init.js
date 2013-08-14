@@ -37,6 +37,15 @@ var toolkit_offset_x = sides_x * sidelength + toolkit_offset_padding_x;
 var toolkit_offset_y = 0;
 
 Cartography.Map = Cartography.Map || {};
+Cartography.Map.getIndex1D = function(gridCoords) {
+	var index1D = null;
+	if ('x' in gridCoords && 'y' in gridCoords) {
+		index1D = sides_x * gridCoords.y + gridCoords.x;
+	} else {
+		throw new Error('Grid Coordinates must contain valid x and y fields.');
+	}
+	return index1D;
+}
 Cartography.Map.coordToGrid = function(coords) {
 	var grid_result = null;
 	//coords expected to be { x: num, y: num }
@@ -119,7 +128,7 @@ function onDocumentMouseDown(event) {
 				//var toolkit_click = Cartography.Toolkit.coordToGrid({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
 				var clicked_toolkit_tile = Cartography.Toolkit.coordToTile({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
 				//console.log("Hit Tile: (" + toolkit_click.x + ',' + toolkit_click.y + ')');
-				console.log('Hit map tile: ' + clicked_toolkit_tile.mesh.position.x + ', ' + clicked_toolkit_tile.mesh.position.y);
+				console.log('Hit toolkit tile ['+clicked_toolkit_tile.tileset_id+';'+clicked_toolkit_tile.tile_id+']: ' + clicked_toolkit_tile.mesh.position.x + ', ' + clicked_toolkit_tile.mesh.position.y);
 				toolkit_selector.position.x = intersects[0].object.position.x;
 				toolkit_selector.position.y = intersects[0].object.position.y;
 			} else {
@@ -215,6 +224,13 @@ keypress.combo("a", function() {
 keypress.combo("shift a", function() {
 	if (app_focus === 'cartography') {
 		camera.position.x -= 10;
+	}
+});
+
+keypress.combo("space", function(e) {
+	if (app_focus === 'cartography') {
+		e.preventDefault();
+		//TODO: copy from toolkit to map 
 	}
 });
 
@@ -348,7 +364,7 @@ var init_cartography = function() {
 			var material = new THREE.MeshBasicMaterial({map: toolkit_texture, side: THREE.DoubleSide });
 			
 			var planemesh = new THREE.Mesh(plane, material);
-			toolkit_tiles[x][y] = { plane: plane, mesh: planemesh };
+			toolkit_tiles[x][y] = { plane: plane, mesh: planemesh, tile_id: the_tile.tile_id, tileset_id: active_cartography_tileset_id };
 			planemesh.position.x = x * sidelength + toolkit_offset_x;
 			planemesh.position.y = y * sidelength + toolkit_offset_y
 			planemesh.overdraw = true;
