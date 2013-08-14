@@ -39,11 +39,10 @@ var toolkit_offset_y = 0;
 Cartography.Map = Cartography.Map || {};
 Cartography.Map.coordToGrid = function(coords) {
 	var grid_result = null;
-	//TODO: Still need to work on this. Should return actual tile object
 	//coords expected to be { x: num, y: num }
 	if ('x' in coords && 'y' in coords) {
-		var tile_x = Math.floor(coords.x / sidelength);
-		var tile_y = Math.floor(coords.y / sidelength);
+		var tile_x = Math.floor((coords.x - map_offset_x) / sidelength);
+		var tile_y = Math.floor((coords.y - map_offset_y) / sidelength);
 		if (tile_x >= 0 && tile_x < sides_x && tile_y >= 0 && tile_y < sides_y) {
 			grid_result = { x: tile_x, y: tile_y };
 		}
@@ -57,7 +56,26 @@ Cartography.Map.getTile = function(gridCoords) {
 Cartography.Map.coordToTile = function(coords) {
 	return Cartography.Map.getTile(Cartography.Map.coordToGrid(coords));
 }
-
+Cartography.Toolkit = Cartography.Toolkit || {};
+Cartography.Toolkit.coordToGrid = function(coords) {
+	var grid_result = null;
+	//coords expected to be { x: num, y: num }
+	if ('x' in coords && 'y' in coords) {
+		var tile_x = Math.floor((coords.x - toolkit_offset_x) / sidelength);
+		var tile_y = Math.floor((coords.y - toolkit_offset_y) / sidelength);
+		if (tile_x >= 0 && tile_x < sides_x && tile_y >= 0 && tile_y < sides_y) {
+			grid_result = { x: tile_x, y: tile_y };
+		}
+	}
+	
+	return grid_result;
+}
+Cartography.Toolkit.getTile = function(gridCoords) {
+	return toolkit_tiles[gridCoords.x][gridCoords.y];
+};
+Cartography.Toolkit.coordToTile = function(coords) {
+	return Cartography.Toolkit.getTile(Cartography.Toolkit.coordToGrid(coords));
+}
 
 function onDocumentMouseDown(event) {
 	if (event.target.localName === 'canvas') {
@@ -95,17 +113,20 @@ function onDocumentMouseDown(event) {
 		
 		// if there is one (or more) intersections
 		if (intersects.length > 0) {
-			//var map_click = Cartography.Map.coordToGrid({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
-			var clicked_map_tile = Cartography.Map.coordToTile({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
-			//console.log("Hit Tile: (" + map_click.x + ',' + map_click.y + ')');
-			console.log('Hit tile: ' + clicked_map_tile.mesh.position.x + ', ' + clicked_map_tile.mesh.position.y);
-			
 			//Test to see if the click is inside the toolkit.
 			//This is not the best solution, but it will do the trick for now.
 			if (intersects[0].object.position.x >= toolkit_offset_x) {
+				//var toolkit_click = Cartography.Toolkit.coordToGrid({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
+				var clicked_toolkit_tile = Cartography.Toolkit.coordToTile({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
+				//console.log("Hit Tile: (" + toolkit_click.x + ',' + toolkit_click.y + ')');
+				console.log('Hit map tile: ' + clicked_toolkit_tile.mesh.position.x + ', ' + clicked_toolkit_tile.mesh.position.y);
 				toolkit_selector.position.x = intersects[0].object.position.x;
 				toolkit_selector.position.y = intersects[0].object.position.y;
 			} else {
+				//var map_click = Cartography.Map.coordToGrid({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
+				var clicked_map_tile = Cartography.Map.coordToTile({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
+				//console.log("Hit Tile: (" + map_click.x + ',' + map_click.y + ')');
+				console.log('Hit map tile: ' + clicked_map_tile.mesh.position.x + ', ' + clicked_map_tile.mesh.position.y);
 				map_selector.position.x = intersects[0].object.position.x;
 				map_selector.position.y = intersects[0].object.position.y;
 			}
@@ -285,7 +306,7 @@ var init_cartography = function() {
 	var texture = new THREE.ImageUtils.loadTexture(normalizePath("/tilesets/robots/floor.png"));
 	texture.wrapS = THREE.RepeatWrapping; 
 	texture.wrapT = THREE.RepeatWrapping;
-	var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide });
+	var material = new THREE.MeshBasicMaterial({ color:0x333333,  wireframe: true }); //NOTE: when the tile has a texture, have this instead: map: texture, side: THREE.DoubleSide,
 
 	//Create map potion of the interface
 	map_tiles = Cartography.createArray(sides_x, sides_y);
