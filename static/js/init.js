@@ -320,7 +320,7 @@ $.ajax({
 						complete: function(xhrTileset,statusTileset) {
 							if (statusTileset === 'success') {
 								var tileset_data = JSON.parse(xhrTileset.responseText);
-								console.log('tileset_data: ' + JSON.stringify(tileset_data));
+								//console.log('tileset_data: ' + JSON.stringify(tileset_data));
 								
 								cartography_tilesets[tileset_data.id] = {master: active_tileset.location, tiles: tileset_data.tiles};
 								active_cartography_tileset_id = tileset_data.id;
@@ -347,7 +347,7 @@ var init_cartography = function() {
 	var texture = new THREE.ImageUtils.loadTexture(normalizePath("/tilesets/robots/floor.png"));
 	texture.wrapS = THREE.RepeatWrapping; 
 	texture.wrapT = THREE.RepeatWrapping;
-	var material = new THREE.MeshBasicMaterial({ color:0x333333,  wireframe: true }); //NOTE: when the tile has a texture, have this instead: map: texture, side: THREE.DoubleSide,
+	var material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide }/*{ color:0x333333,  wireframe: true }*/); //NOTE: when the tile has a texture, have this instead: map: texture, side: THREE.DoubleSide,
 
 	//Create map potion of the interface
 	map_tiles = Cartography.createArray(sides_x, sides_y);
