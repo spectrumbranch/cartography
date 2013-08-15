@@ -135,7 +135,8 @@ function onDocumentMouseDown(event) {
 				//var map_click = Cartography.Map.coordToGrid({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
 				var clicked_map_tile = Cartography.Map.coordToTile({ x: intersects[0].object.position.x, y: intersects[0].object.position.y });
 				//console.log("Hit Tile: (" + map_click.x + ',' + map_click.y + ')');
-				console.log('Hit map tile: ' + clicked_map_tile.mesh.position.x + ', ' + clicked_map_tile.mesh.position.y);
+				
+				console.log('Hit map tile [' + clicked_map_tile.index + ']: ' + clicked_map_tile.mesh.position.x + ', ' + clicked_map_tile.mesh.position.y);
 				map_selector.position.x = intersects[0].object.position.x;
 				map_selector.position.y = intersects[0].object.position.y;
 			}
@@ -230,7 +231,31 @@ keypress.combo("shift a", function() {
 keypress.combo("space", function(e) {
 	if (app_focus === 'cartography') {
 		e.preventDefault();
-		//TODO: copy from toolkit to map 
+		console.log('fired space!');
+		//TODO: copy from toolkit to map
+		
+		var selected_toolkit_tile = Cartography.Toolkit.coordToTile({ x: toolkit_selector.position.x, y: toolkit_selector.position.y });
+		
+		var selected_toolkit_tile_texture = selected_toolkit_tile.mesh.material.map;
+		var selected_toolkit_tile_tileset_id = selected_toolkit_tile.tileset_id;
+		var selected_toolkit_tile_tile_id = selected_toolkit_tile.tile_id;
+		
+		
+		var clicked_map_tile = Cartography.Map.coordToTile({ x: map_selector.position.x, y: map_selector.position.y });
+		var clicked_map_tile_index = clicked_map_tile.index;
+		
+		
+		var material = new THREE.MeshBasicMaterial({map: selected_toolkit_tile_texture, side: THREE.DoubleSide })
+		clicked_map_tile.mesh.material = material;
+		
+		clicked_map_tile.mesh.geometry.verticesNeedUpdate = true;
+		clicked_map_tile.mesh.geometry.elementsNeedUpdate = true;
+		//clicked_map_tile.mesh.geometry.morphTargetsNeedUpdate = true;
+		//clicked_map_tile.mesh.geometry.uvsNeedUpdate = true;
+		//clicked_map_tile.mesh.geometry.normalsNeedUpdate = true;
+		clicked_map_tile.mesh.geometry.colorsNeedUpdate = true;
+		//clicked_map_tile.mesh.geometry.tangentsNeedUpdate = true;
+		
 	}
 });
 
@@ -332,7 +357,9 @@ var init_cartography = function() {
 		for (var j = 0; j < sides_y; j++) {
 			var plane = new THREE.PlaneGeometry(sidelength, sidelength);
 			var planemesh = new THREE.Mesh(plane, material);
-			map_tiles[i][j] = { plane: plane, mesh: planemesh };
+			var index1D = Cartography.Map.getIndex1D({ x: i, y: j })
+			
+			map_tiles[i][j] = { plane: plane, mesh: planemesh, index: index1D };
 			planemesh.position.x = i * sidelength + map_offset_x;
 			planemesh.position.y = j * sidelength + map_offset_y;
 			planemesh.overdraw = true;
