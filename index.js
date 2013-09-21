@@ -44,7 +44,7 @@ server.route([
   //Cartography Routes
   { method: 'GET', 	path: '/', config: { handler: home.handler, auth: { mode: 'try' } } },
   { method: '*', 	path: '/version', handler: function() { this.reply(util.version); } },
-  //Scurvy Routes
+  //Authentication Routes
   { method: '*', 	path: '/confirm/{hashkey*}', config: { handler: auth.confirm, auth: false  } },
   { method: 'POST', path: '/register', config: { handler: auth.register, validate: { payload: scurvy.register_validate(Hapi) }, auth: false  } },
   { method: 'POST', path: '/login', config: { handler: auth.login, validate: { payload: scurvy.login_validate(Hapi) }, auth: { mode: 'try' }  } },
