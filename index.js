@@ -13,11 +13,12 @@ if (serverConfig.tls) {
 
 var server = new Hapi.Server(serverConfig.hostname, serverConfig.port, options);
 
-var util = require('./lib').Util;
-var auth = require('./lib').Auth;
-var mailer = require('./lib').Mailer;
-var home = require('./lib').Home;
-var scurvy = require('scurvy');
+var Cartography = require('./lib');
+var util = Cartography.Util;
+var auth = Cartography.Auth;
+var mailer = Cartography.Mailer;
+var home = Cartography.Home;
+var scurvy = Cartography.Scurvy;
 mailer.init(mailConfig);
 
 server.auth('session', {
