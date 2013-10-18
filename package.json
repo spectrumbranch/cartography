@@ -25,10 +25,11 @@
   "gitHead": "e4f82839106932442bfdfb17303e760d77d284a7",
   "dependencies": {
     "hapi": "~1.8.3",
-    "scurvy": "0.1.2",
+    "scurvy": "~0.2.1",
     "sequelize": "~2.0.0-alpha2",
     "mysql": "~2.0.0-alpha8",
     "nodemailer": "~0.4.4",
-    "handlebars": "~1.0.12"
+    "handlebars": "~1.0.12",
+    "joi": "~1.2.2"
   }
 }

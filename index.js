@@ -39,6 +39,25 @@ server.views({
 	partialsPath: './lib/views/partials'
 });
 
+login_validate = function() {
+	var S = Hapi.types.String;
+	return {
+		userid: S().required().min(5).max(30),
+		passwrd: S().required().min(8),
+		view: S()
+	}
+}
+
+register_validate = function() {
+	var S = Hapi.types.String;
+	return {
+		userid: S().required().min(5).max(30),
+		passwrd: S().required().min(8),
+		passwrd0: S().required().min(8),
+		email: S().email().required().max(50)
+	}
+}
+
 
 server.route([
   //Cartography Routes
@@ -46,8 +65,8 @@ server.route([
   { method: '*', 	path: '/version', handler: function() { this.reply(util.version); } },
   //Authentication Routes
   { method: '*', 	path: '/confirm/{hashkey*}', config: { handler: auth.confirm, auth: false  } },
-  { method: 'POST', path: '/register', config: { handler: auth.register, validate: { payload: scurvy.register_validate(Hapi) }, auth: false  } },
-  { method: 'POST', path: '/login', config: { handler: auth.login, validate: { payload: scurvy.login_validate(Hapi) }, auth: { mode: 'try' }  } },
+  { method: 'POST', path: '/register', config: { handler: auth.register, validate: { payload: register_validate() }, auth: false  } },
+  { method: 'POST', path: '/login', config: { handler: auth.login, validate: { payload: login_validate() }, auth: { mode: 'try' }  } },
   { method: 'GET', path: '/login', config: { handler: auth.login_view, auth: { mode: 'try' }  } },
   { method: '*', path: '/logout', config: { handler: auth.logout, auth: true  } },
   
