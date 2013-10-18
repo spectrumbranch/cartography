@@ -16,9 +16,15 @@
 			{{#if anonymous}}
 				
 			{{else}}
+				<li class="has-dropdown"><a href="#">Map</a>
+					<ul class="dropdown"><li class="title back js-generated"><h5><a href="#">« Back</a></h5></li>
+						<li><a id="saveMap">Save Map</a></li>
+						<li><a id="loadMap">Load Map</a></li>
+					</ul>
+				</li>
+				<li class="divider"></li>
 				<li class="has-dropdown"><a href="#">Tileset</a>
 					<ul class="dropdown"><li class="title back js-generated"><h5><a href="#">« Back</a></h5></li>
-						<li><label>Tileset</label></li>
 						<li><a href="#">Load Tileset</a></li>
 					</ul>
 				</li>
