@@ -47,7 +47,9 @@ Set up the HTTP server, mail, and tls config in ```./config/config.js```. The fo
 exports.config = {
   hostname: '0.0.0.0',
   port: 8000,
-  tls: false
+  tls: false,
+  cookie_name: 'cartography-cookie',
+  cookie_password: 'sdoi239fsER0a1'
 };
 
 exports.mailconfig = {

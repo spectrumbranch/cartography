@@ -23,8 +23,8 @@ mailer.init(mailConfig);
 
 server.auth('session', {
     scheme: 'cookie',
-    password: 'sdoi239fsER0a1', //TODO: refactor this out to gitignored auth config file
-    cookie: 'cartography-cookie',  //?TODO: refactor this out to gitignored auth config file
+    password: serverConfig.cookie_password,
+    cookie: serverConfig.cookie_name,
     redirectTo: '/',
 	isSecure: serverConfig.tls,
 	ttl: 1800000,
