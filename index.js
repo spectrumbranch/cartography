@@ -78,8 +78,21 @@ server.route([
 var virt_modules = [];
 virt_modules.push(scurvy);
 
+var database_config_to_use = '';
+switch (process.env.NODE_ENV) {
+	case 'test_travis':
+		database_config_to_use = './config/database.test_travis';
+		break;
+	case undefined:
+	case 'production':
+	case 'development':
+		database_config_to_use = './config/database';
+		break;
+}
+var dbconfig = require(database_config_to_use).config;
+
 var db = require('./lib/models');
-db.init(virt_modules, function() {
+db.init(dbconfig, virt_modules, function() {
 	console.log('database setup complete');
 	
 	//start server
