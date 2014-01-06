@@ -78,6 +78,7 @@ server.route([
 var virt_modules = [];
 virt_modules.push(scurvy);
 
+//console.log("process.env.NODE_ENV: [" + process.env.NODE_ENV + "]");
 var database_config_to_use = '';
 switch (process.env.NODE_ENV) {
 	case 'test_travis':
