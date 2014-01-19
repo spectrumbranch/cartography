@@ -76,7 +76,7 @@ server.route([
 
 //setup/load modules/plugins here
 var virt_modules = [];
-virt_modules.push(scurvy);
+virt_modules.scurvy = scurvy;
 
 //console.log("process.env.NODE_ENV: [" + process.env.NODE_ENV + "]");
 var database_config_to_use = '';
