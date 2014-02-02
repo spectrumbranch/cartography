@@ -18,6 +18,7 @@ var util = Cartography.Util;
 var auth = Cartography.Auth;
 var mailer = Cartography.Mailer;
 var home = Cartography.Home;
+var admin = Cartography.Admin;
 var scurvy = Cartography.Scurvy;
 mailer.init(mailConfig);
 
@@ -69,6 +70,8 @@ server.route([
   { method: 'POST', path: '/login', config: { handler: auth.login, validate: { payload: login_validate() }, auth: { mode: 'try' }  } },
   { method: 'GET', path: '/login', config: { handler: auth.login_view, auth: { mode: 'try' }  } },
   { method: '*', path: '/logout', config: { handler: auth.logout, auth: true  } },
+  //Administration Routes
+  { method: 'GET', path: '/admin', config: { handler: admin.handler, auth: true } },
   
   //All static content
   { method: '*', 	path: '/{path*}', handler: { directory: { path: './static/', listing: false, redirectToSlash: true } } }

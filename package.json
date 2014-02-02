@@ -31,6 +31,6 @@
     "nodemailer": "~0.4.4",
     "handlebars": "~1.0.12",
     "joi": "~1.2.2",
-    "cartography-models": "~0.1.0"
+    "cartography-models": "~0.2.0"
   }
 }
