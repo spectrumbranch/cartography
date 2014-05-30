@@ -60,7 +60,7 @@ exports.mailconfig = {
   }
 };
 
-//If exports.config.tls == true, then the following tlsconfig is required to be uncommneted and filled out properly.
+//If exports.config.tls == true, then the following tlsconfig is required to be uncommented and filled out properly.
 //Keep this commented out if exports.config.tls == false
 //var fs = require('fs');
 //exports.tlsconfig = {
